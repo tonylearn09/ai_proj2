@@ -169,7 +169,7 @@ def updateFeature(gomoku, pos_index):
                     valid_pos.append(nextMove_i+delta, nextMove_j-delta)
 
 
-    if nextMove_i > 8:
+    elif nextMove_i > 8:
         # bottom half (head)
         start_diag_tuple = pos_index
         valid_pos.append(start_diag_tuple)
@@ -195,7 +195,7 @@ def updateFeature(gomoku, pos_index):
             else:
                 col_index = nextMove_j + (nextMove_i - 8)
                 if col_index < len(gomoku.gomokuboard[nextMove_i-delta]):
-                    start_rdiag_tuple = (nextMove_i-delta, nextMove_j-delta)
+                    start_rdiag_tuple = (nextMove_i-delta, col_index)
                     valid_pos.append(start_rdiag_tuple)
 
         startPos['rdiag'] = start_rdiag_tuple
@@ -222,18 +222,18 @@ def updateFeature(gomoku, pos_index):
                     windowCount['agent'] += 1
                 elif gomoku.gomokuboard[i][j] == opponent:
                     windowCount['opponent'] += 1
-                    initial += 1
-                    if i <= 8:
-                        # top half
-                        i += direction[d][0]
-                        j += direction[d][1]
-                    else:
-                        # bottom
-                        i += direction[d+'_b'][0]
-                        j += direction[d+'_b'][1]
+                initial += 1
+                if i <= 8:
+                    # top half
+                    i += direction[d][0]
+                    j += direction[d][1]
+                else:
+                    # bottom
+                    i += direction[d+'_b'][0]
+                    j += direction[d+'_b'][1]
 
-                    prev_history.append([i, j])
-                    continue
+                prev_history.append((i, j))
+                continue
             if (gomoku.gomokuboard[i][j] == agent):
                 windowCount['agent'] += 1
             elif (gomoku.gomokuboard[i][j] == opponent):
@@ -262,6 +262,7 @@ def updateFeature(gomoku, pos_index):
                 # bottom
                 i += direction[d+'_b'][0]
                 j += direction[d+'_b'][1]
+            prev_history.append((i,j))
 
     return {'agent': agentCount, 'opponent': opponentCount}
 
