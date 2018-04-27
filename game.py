@@ -3,8 +3,6 @@ import collections
 import copy
 from collections import deque
 
-const_agentId = 1
-const_oppoId = 2
 
 class Gomoku:
     def __init__(self, first_player):
@@ -78,6 +76,9 @@ class Gomoku:
         # update a board given a pos
         # pos is in the form 0~216
         pos_index = self.index_map[pos]
+        if self.gomokuboard[pos_index[0]][pos_index[1]] == 0:
+            # No update
+            return False
         self.totalSteps[self.nextPlayer - 1] += 1
         self.lastMove = pos_index
 
@@ -90,6 +91,8 @@ class Gomoku:
         self.gomokuboard[pos_index[0]][pos_index[1]] = self.nextPlayer
         self.nextPlayer = 2 if self.nextPlayer == 1 else 1
 
+        return True
+
     def revert(self, lastPos):
         # revert last move given updated last postion
         self.totalSteps[2 - self.nextPlayer] -= 1
@@ -100,6 +103,56 @@ class Gomoku:
         assert(len(self.prevWinningCount) > 0)
         self.winningCount = self.prevWinningCount[-1]
         self.prevWinningCount.pop()
+
+    def isEnd(self, debug = False): 
+        # check if the game ends
+        # return if a game terminates
+        # -1 - not end
+        # 0 - break even
+        # 1 - player 1 wins
+        # 2 - player 2 wins
+        def boardState(pos): 
+            # helper function to return state of a position
+            # pos = (coor x, coor y)
+            if (pos[0] < 0 or pos[0] > 17 or pos[1] < 0 or pos[1] >= len(self.gomokuboard[pos[0]])):
+                return -1
+            else:
+                return self.chessBoard[pos[0]][pos[1]]
+
+        if sum(self.totalSteps) >= 217:
+            return 0
+        direction = {'W': (0, -1), 'E': (0, 1), 
+                     'NW': (-1, -1), 'SE': (1, 1), 
+                     'NE': (-1, 0), 'SW': (1, 0),
+                     'W_b': (0, -1), 'E_b': (0, 1),
+                     'NW_b': (-1, 0), 'SE_b': (1, 0),
+                     'NE_b': (-1, 1), 'SE_b': (1, -1)}
+
+        count = {'W': 0, 'E': 0, 
+                 'NW': 0, 'SE': 0,
+                 'NE': 0, 'SW': 0}
+
+        lastPlayer = 2 if self.nextPlayer == 1 else 1
+        for d in direction:
+            i = self.lastMove[0]
+            j = self.lastMove[1]
+            while boardState((i, j)) == lastPlayer:
+                count[d] += 1
+                if i <= 8:
+                    # top half
+                    i += direction[d][0]
+                    j += direction[d][1]
+                else:
+                    # bottom
+                    i += direction[d+'_b'][0]
+                    j += direction[d+'_b'][1]
+        if debug:
+            print count
+        if (count['W'] + count['E'] >= 6) \
+           or (count['NW'] + count['SE'] >= 6) or (count['NE'] + count['SW'] >= 6):
+            return lastPlayer
+        else:
+            return -1
 
     def clear(self, first_player):
         self.init_board()
