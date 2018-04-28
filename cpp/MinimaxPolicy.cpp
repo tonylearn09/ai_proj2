@@ -99,7 +99,7 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
 
 }
 
-float MinimaxPolicy::evalFunc(Gomoku game, map<int, float> weights) {
+float evalFunc(Gomoku game, map<int, float> weights) {
     vector<int> agentCount = game.winningCount[const_agentId - 1];
     vector<int> oppoCount = game.winningCount[const_oppoId - 1];
 
