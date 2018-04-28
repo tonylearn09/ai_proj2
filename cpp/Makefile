@@ -4,20 +4,20 @@ CFLAGS = -g -O2 -std=c++11
 
 # This makefile compiles the project listed in the PROJ macro
 SOURCES = Gomoku.cpp MinimaxPolicy.cpp RandomPolicy.cpp play.cpp
-OBJECTS = $(SOURCES:.c=.o)
+OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = gomoku_ai
 
 # Buid rule
 $(TARGET) : $(OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
 
-Gomoku.o : Gomoku.h
+Gomoku.o : Gomoku.h Gomoku.cpp
 	$(CC) $(CFLAGS) -c Gomoku.cpp
-MinimaxPolicy.o : MinimaxPolicy.h
+MinimaxPolicy.o : MinimaxPolicy.h MinimaxPolicy.cpp
 	$(CC) $(CFLAGS) -c MinimaxPolicy.cpp
-RandomPolicy.o : RandomPolicy.h
+RandomPolicy.o : RandomPolicy.h RandomPolicy.cpp
 	$(CC) $(CFLAGS) -c RandomPolicy.cpp
-play.o :
+play.o : play.cpp
 	$(CC) $(CFLAGS) -c play.cpp
 
 
@@ -25,5 +25,5 @@ play.o :
 # The phony target "clean" is used to remove all compiled object files.
 .PHONY: clean
 clean:
-	@rm -f $(TARGET) $(OBJECTS) core
+	@rm -f $(TARGET) $(OBJECTS)
 
