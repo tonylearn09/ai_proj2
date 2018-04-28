@@ -3,7 +3,7 @@ CC = g++
 CFLAGS = -g -O2 -std=c++11
 
 # This makefile compiles the project listed in the PROJ macro
-SOURCES = Gomoku.cpp MinimaxPolicy.cpp RandomPolicy.cpp play.cpp
+SOURCES = Gomoku.cpp MinimaxPolicy.cpp RandomPolicy.cpp play.cpp TdLearner.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = gomoku_ai
 
@@ -17,6 +17,8 @@ MinimaxPolicy.o : MinimaxPolicy.h MinimaxPolicy.cpp
 	$(CC) $(CFLAGS) -c MinimaxPolicy.cpp
 RandomPolicy.o : RandomPolicy.h RandomPolicy.cpp
 	$(CC) $(CFLAGS) -c RandomPolicy.cpp
+TdLearner.o : TdLearner.h TdLearner.cpp
+	$(CC) $(CFLAGS) -c TdLearner.cpp
 play.o : play.cpp
 	$(CC) $(CFLAGS) -c play.cpp
 
