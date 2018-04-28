@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Gomoku.h"
-using namespace std
+
+using namespace std;
 
 // function
 Gomoku::Gomoku(int first_player) {
@@ -95,9 +96,9 @@ tuple<int, int, int> Gomoku::currentGame() {
 bool Gomoku::updateBoard(int pos) {
     // update a board given a pos
     // pos is in the form 0~216
-    pos_index = index_map[pos];
-    pos_index_x = get<0>(pos_index);
-    pos_index_y = get<1>(pos_index);
+    tuple<int, int> pos_index = index_map[pos];
+    int pos_index_x = get<0>(pos_index);
+    int pos_index_y = get<1>(pos_index);
     if (gomokuboard[pos_index_x][pos_index_y] != 0) {
         // no update
         return false;
@@ -107,7 +108,7 @@ bool Gomoku::updateBoard(int pos) {
     lastMove = pos_index;
 
     prevWinningCount.push_back(winningCount);
-    newWinningCount = updateFeature(pos_index);
+    map<string, vector<int> > newWinningCount = updateFeature(pos_index);
     if (nextPlayer == 1) {
         winningCount[0] = newWinningCount["agent"];
         winningCount[1] = newWinningCount["opponent"];
@@ -118,16 +119,16 @@ bool Gomoku::updateBoard(int pos) {
     gomokuboard[pos_index_x][pos_index_y] = nextPlayer;
     nextPlayer = 3 - nextPlayer;
 
-    return True
+    return true;
 }
 
 void Gomoku::revert(int lastPos) {
     // revert last move given updated last postion
-    pos_index = index_map[lastPos];
-    pos_index_x = get<0>(pos_index);
-    pos_index_y = get<1>(pos_index);
+    tuple<int, int> pos_index = index_map[lastPos];
+    int pos_index_x = get<0>(pos_index);
+    int pos_index_y = get<1>(pos_index);
 
-    totalSteps[2 - self.nextPlayer] -= 1;
+    totalSteps[2 - nextPlayer] -= 1;
     gomokuboard[pos_index_x][pos_index_y] = 0;
     nextPlayer = 3 - nextPlayer;
     lastMove = pos_index;
@@ -136,7 +137,7 @@ void Gomoku::revert(int lastPos) {
     prevWinningCount.pop_back();
 }
 
-int Gomoku::isEnd(bool debug=false) { 
+int Gomoku::isEnd(bool debug) { 
     // check if the game ends
     // return if a game terminates
     // -1 - not end
@@ -150,15 +151,15 @@ int Gomoku::isEnd(bool debug=false) {
         {"W", 0}, {"E", 0}, 
         {"NW", 0}, {"SE", 0},
         {"NE", 0}, {"SW", 0}
-    }
+    };
 
-    lastPlayer = 3 - self.nextPlayer;
+    int lastPlayer = 3 - nextPlayer;
     for (auto const& d: count) {
-        i = get<0>(lastMove);
-        j = get<1>(lastMove);
+        int i = get<0>(lastMove);
+        int j = get<1>(lastMove);
         while (boardState(i, j) == lastPlayer) {
             count[d.first] += 1;
-            if i < 8 {
+            if (i < 8 ) {
                 // top half
                 i += get<0>(is_end_check_dir_map[d.first]);
                 j += get<1>(is_end_check_dir_map[d.first]);
@@ -169,8 +170,8 @@ int Gomoku::isEnd(bool debug=false) {
         }
     }
 
-    if (debug)
-        cout << count << endl;
+    //if (debug)
+        //cout << count << endl;
     if ((count["W"] + count["E"] >= 6) ||
             (count["NW"] + count["SE"] >= 6) ||
             (count["NE"] + count["SW"] >= 6)) 
@@ -188,26 +189,26 @@ void Gomoku::clear(int first_player) {
     totalSteps = vector<int>(2); // (agent, opponent)
 
     // [[agent count], [opponent count]]
-    windowCount[0] = vector<int>(6);
+    winningCount[0] = vector<int>(6);
     winningCount[1] = vector<int>(6);
     winningCount[0][0] = winningCount[1][0] = 217;
 
     prevWinningCount.clear();
-    print("Finish clearing up board for restart");
+    cout << "Finish clearing up board for restart" << endl ;
 }
 
 map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
     //print(pos_index);
-    windowSize = 5;
+    int windowSize = 5;
 
-    agent = nextPlayer;
-    opponent = 3 - agent;
+    int agent = nextPlayer;
+    int opponent = 3 - agent;
 
-    agentCount = winningCount[agent - 1];
-    opponentCount = winningCount[opponent - 1];
+    vector<int> agentCount = winningCount[agent - 1];
+    vector<int> opponentCount = winningCount[opponent - 1];
 
-    nextMove_i = get<0>(pos_index);
-    nextMove_j = get<1>(pos_index);
+    int nextMove_i = get<0>(pos_index);
+    int nextMove_j = get<1>(pos_index);
 
     set<tuple<int, int> > valid_pos;
     map<string, tuple<int,int> > startPos; 
@@ -215,14 +216,14 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
     // row
     for (int delta = 0; delta < 5; delta++) {
         if (nextMove_j - delta >= 0) {
-            valid_tuple = make_tuple(nextMove_i, nextMove_j-delta);
+            tuple<int,int> valid_tuple = make_tuple(nextMove_i, nextMove_j-delta);
             valid_pos.insert(valid_tuple);
             startPos["row"] = valid_tuple;
         }
     }
     for (int delta = 0; delta < 5; delta++) {
         if (nextMove_j + delta < gomokuboard[nextMove_i].size()) {
-            valid_tuple = make_tuple(nextMove_i, nextMove_j+delta);
+            tuple<int,int> valid_tuple = make_tuple(nextMove_i, nextMove_j+delta);
             valid_pos.insert(valid_tuple);
         }
     }
@@ -232,14 +233,14 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
         // top half (head)
         for (int delta = 0; delta < 5; delta++) {
             if (nextMove_i - delta >= 0 && nextMove_j - delta >= 0) {
-                valid_tuple = make_tuple(nextMove_i - delta, nextMove_j - delta);
+                tuple<int,int> valid_tuple = make_tuple(nextMove_i - delta, nextMove_j - delta);
                 valid_pos.insert(valid_tuple);
                 startPos["diag"] = valid_tuple;
             }
         }
         for (int delta = 0; delta < 5; delta++) {
             if (nextMove_i - delta >= 0 && nextMove_j < gomokuboard[nextMove_i-delta].size()) {
-                valid_tuple = make_tuple(nextMove_i - delta, nextMove_j);
+                tuple<int,int> valid_tuple = make_tuple(nextMove_i - delta, nextMove_j);
                 valid_pos.insert(valid_tuple);
                 startPos["rdiag"] = valid_tuple;
             }
@@ -250,7 +251,7 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
         // diag
         for (int delta = 0; delta < 5; delta++) {
             if (nextMove_i + delta > 8) {
-                y_index = nextMove_j + (8 - nextMove_i);
+                int y_index = nextMove_j + (8 - nextMove_i);
                 if (y_index < gomokuboard[nextMove_i+delta].size()) {
                     valid_pos.insert(make_tuple(nextMove_i+delta, y_index));
                 }
@@ -264,7 +265,7 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
         // rdiag
         for (int delta = 0; delta < 5; delta++) {
             if (nextMove_i + delta >= 8) {
-                y_index = nextMove_j - (delta - (8 - nextMove_i));
+                int y_index = nextMove_j - (delta - (8 - nextMove_i));
                 if (y_index >= 0) {
                     valid_pos.insert(make_tuple(nextMove_i+delta, y_index));
                 }
@@ -275,16 +276,16 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
 
     } else if (nextMove_i > 8) {
         // bottom half (head)
-        valid_pos.insert(start_diag_tuple);
+      
         for (int delta = 0; delta < 5; delta++) {
             if (nextMove_i - delta > 8) {
-                valid_tuple = make_tuple(nextMove_i-delta, nextMove_j);
+                tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, nextMove_j);
                 startPos["diag"] = valid_tuple;
                 valid_pos.insert(valid_tuple);
             } else {
-                col_index = nextMove_j - (delta - (nextMove_i - 8));
+                int col_index = nextMove_j - (delta - (nextMove_i - 8));
                 if (col_index >= 0) {
-                    valid_tuple = make_tuple(nextMove_i-delta, col_index)
+                    tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, col_index);
                     startPos["diag"] = valid_tuple;
                     valid_pos.insert(valid_tuple);
                 }
@@ -294,16 +295,16 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
         for (int delta = 0; delta < 5; delta++) {
             if (nextMove_i - delta >= 8) {
                 if (nextMove_j + delta < gomokuboard[nextMove_i-delta].size()) {
-                    valid_tuple = make_tuple(nextMove_i-delta, nextMove_j+delta)
+                    tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, nextMove_j+delta);
                     startPos["rdiag"] = valid_tuple;
-                    valid_pos.insert(valid_tuple)
+                    valid_pos.insert(valid_tuple);
                 }
             } else {
-                col_index = nextMove_j + (nextMove_i - 8);
+                int col_index = nextMove_j + (nextMove_i - 8);
                 if (col_index < gomokuboard[nextMove_i-delta].size()) {
-                    valid_tuple = make_tuple(nextMove_i-delta, col_index)
+                    tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, col_index);
                     startPos["rdiag"] = valid_tuple;
-                    valid_pos.insert(valid_tuple)
+                    valid_pos.insert(valid_tuple);
                 }
             }
         }
@@ -322,10 +323,10 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
         {0, "row"}, {1, "diag"}, {2, "rdiag"}
     };
     for (int k = 0; k < 3; k++) {
-        pair = startPos[index_dir[k]];
-        i = get<0>(pair);
-        j = get<1>(pair);
-        initial = 0;
+        tuple<int,int> pair = startPos[index_dir[k]];
+        int i = get<0>(pair);
+        int j = get<1>(pair);
+        int initial = 0;
         map<string, int> windowCount = {{"agent", 0}, {"opponent", 0}};
         deque<tuple<int, int> > prev_history;
         prev_history.push_back(make_tuple(-1, -1)); //dummy
@@ -333,38 +334,39 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
 
         while (valid_pos.find(make_tuple(i, j)) != valid_pos.end()) {
             
-            if initial < windowSize - 1 {
-                if (gomoku.gomokuboard[i][j] == agent)
+            if (initial < windowSize - 1 ) {
+                if (gomokuboard[i][j] == agent)
                     windowCount["agent"] += 1;
-                else if (gomoku.gomokuboard[i][j] == opponent)
+                else if (gomokuboard[i][j] == opponent)
                     windowCount["opponent"] += 1;
                 initial += 1;
                 if (i < 8) {
                     // top half
-                    i += get<0>(direction[d]);
-                    j += get<1>(direction[d]);
+                    i += get<0>(update_dir_map[index_dir[k]]);
+                    j += get<1>(update_dir_map[index_dir[k]]);
                 } else {
                     // bottom
-                    i += get<0>(direction[d+"_b"]);
-                    j += get<1>(direction[d+"_b"]);
+                    i += get<0>(update_dir_map[index_dir[k]+"_b"]);
+                    j += get<1>(update_dir_map[index_dir[k]+"_b"]);
                 }
 
-                prev_history.push_back(make_tuple(i, j))
-                continue
+                prev_history.push_back(make_tuple(i, j));
+                continue;
             }
 
 
-            if (gomoku.gomokuboard[i][j] == agent)
+            if (gomokuboard[i][j] == agent)
                 windowCount["agent"] += 1;
-            else if (gomoku.gomokuboard[i][j] == opponent)
+            else if (gomokuboard[i][j] == opponent)
                 windowCount["opponent"] += 1;
 
 
-            prev_pair= prev_history.pop_front()
+            tuple<int,int> prev_pair= prev_history.front();
+            prev_history.pop_front();
             if (valid_pos.find(prev_pair) != valid_pos.end()) {
-                previ = get<0>(prev_pair);
-                prevj = get<1>(prev_pair);
-                prevLoc = gomokuboard[previ][prevj];
+                int previ = get<0>(prev_pair);
+                int prevj = get<1>(prev_pair);
+                int prevLoc = gomokuboard[previ][prevj];
                 if (prevLoc == agent)
                     windowCount["agent"] -= 1;
                 else if (prevLoc == opponent)
@@ -375,17 +377,17 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
                 agentCount[windowCount["agent"]] -= 1;
                 agentCount[windowCount["agent"] + 1] += 1;
             }
-            if (windowCount['agent'] <= 0)
+            if (windowCount["agent"] <= 0)
                 opponentCount[windowCount["opponent"]] -= 1;
 
-            if i < 8 {
+            if (i < 8 ){
                 // top half
-                i += get<0>(direction[d]);
-                j += get<1>(direction[d]);
+                i += get<0>(update_dir_map[index_dir[k]]);
+                j += get<1>(update_dir_map[index_dir[k]]);
             } else {
                 // bottom
-                i += get<0>(direction[d+"_b"]);
-                j += get<1>(direction[d+"_b"]);
+                i += get<0>(update_dir_map[index_dir[k]+"_b"]);
+                j += get<1>(update_dir_map[index_dir[k]+"_b"]);
             }
             prev_history.push_back(make_tuple(i,j));
         }
@@ -394,14 +396,75 @@ map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
     return {{"agent", agentCount}, {"opponent", opponentCount}};
 }
 
-int Gomoku::boardState(pos_x, pos_y) { 
+void Gomoku::print_board() {
+    for (int i = 0 ; i < 17 ; i++) {
+    	if (i == 0 || i == 16) {
+    		cout <<  "        " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 1 || i == 15) {
+			cout <<  "       " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 2 || i == 14) {
+			cout <<  "      " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 3 || i == 13) {
+			cout <<  "     " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 4 || i == 12) {
+			cout <<  "    " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 5 || i == 11) {
+			cout <<  "   " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 6 || i == 10) {
+			cout <<  "  " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else if (i == 7 || i == 9) {
+			cout <<  " " ;
+    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		} else {
+			for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+    			cout << gomokuboard[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
+        
+}
+
+int Gomoku::boardState(int pos_x, int pos_y) { 
     // helper function to return state of a position
     // pos = (coor x, coor y)
     if (pos_x < 0 or pos_x >= 17 or pos_y < 0 or pos_y >= gomokuboard[pos_x].size())
         return -1;
-    else:
+    else
         return gomokuboard[pos_x][pos_y];
 }
+
 
 void Gomoku::init_dir_map() {
     is_end_check_dir_map = {
@@ -411,11 +474,34 @@ void Gomoku::init_dir_map() {
         {"W_b", make_tuple(0, -1)}, {"E_b", make_tuple(0, 1)},
         {"NW_b", make_tuple(-1, 0)}, {"SE_b", make_tuple(1, 0)},
         {"NE_b", make_tuple(-1, 1)}, {"SE_b", make_tuple(1, -1)}
-    }
+    };
     update_dir_map = {
-        {"row", (0, 1)}, {"diag", (1, 1)}, 
-        {"rdiag", (1, 0)}, {"row_b", (0, 1)}, 
-        {"diag_b", (1, 0)}, {"rdiag_b", (1, -1)}
-    }
+        {"row", make_tuple(0, 1)}, {"diag", make_tuple(1, 1)}, 
+        {"rdiag", make_tuple(1, 0)}, {"row_b", make_tuple(0, 1)}, 
+        {"diag_b", make_tuple(1, 0)}, {"rdiag_b", make_tuple(1, -1)}
+    };
 }
-    
+
+/*
+int main(){
+	
+	Gomoku g(1);
+	g.updateBoard(79);
+	g.updateBoard(84);
+	g.updateBoard(80);
+	g.updateBoard(86);
+	g.updateBoard(81);
+	g.updateBoard(85);
+	g.updateBoard(82);
+	g.updateBoard(87);
+	g.updateBoard(100);
+	g.updateBoard(88);
+	cout << g.isEnd() << endl;
+	for(int i = 0 ; i < 2 ; i++){
+		for(int j = 0 ; j < 6 ; j++)
+			cout << g.winningCount[i][j] << " ";
+		cout << endl;
+	}
+	g.print_board();
+}
+*/

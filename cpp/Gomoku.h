@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 #include <set>
-
+#include <deque> 
 using namespace std;
 
 class Gomoku {
@@ -30,8 +30,9 @@ class Gomoku {
         int isEnd(bool debug=false);
         void clear(int first_player);
         map<string, vector<int> > updateFeature(tuple<int, int> pos_index);
+        void print_board();
     private:
-        int boardState(pos_x, pos_y);
+        int boardState(int pos_x, int pos_y);
         void init_dir_map();
 
 };
