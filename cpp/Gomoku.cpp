@@ -122,16 +122,20 @@ bool Gomoku::updateBoard(int pos) {
     return true;
 }
 
-void Gomoku::revert(int lastPos) {
+void Gomoku::revert(tuple<int, int> lastPos) {
     // revert last move given updated last postion
-    tuple<int, int> pos_index = index_map[lastPos];
-    int pos_index_x = get<0>(pos_index);
-    int pos_index_y = get<1>(pos_index);
+    //tuple<int, int> pos_index = index_map[lastPos];
+    //int pos_index_x = get<0>(pos_index);
+    //int pos_index_y = get<1>(pos_index);
 
     totalSteps[2 - nextPlayer] -= 1;
-    gomokuboard[pos_index_x][pos_index_y] = 0;
+
+    int lastMove_x = get<0>(lastMove);
+    int lastMove_y = get<1>(lastMove);
+    gomokuboard[lastMove_x][lastMove_y] = 0;
+
     nextPlayer = 3 - nextPlayer;
-    lastMove = pos_index;
+    lastMove = lastPos;
 
     winningCount = prevWinningCount.back();
     prevWinningCount.pop_back();
@@ -459,7 +463,7 @@ void Gomoku::print_board() {
 int Gomoku::boardState(int pos_x, int pos_y) { 
     // helper function to return state of a position
     // pos = (coor x, coor y)
-    if (pos_x < 0 or pos_x >= 17 or pos_y < 0 or pos_y >= gomokuboard[pos_x].size())
+    if (pos_x < 0 || pos_x >= 17 || pos_y < 0 || pos_y >= gomokuboard[pos_x].size())
         return -1;
     else
         return gomokuboard[pos_x][pos_y];
@@ -473,7 +477,7 @@ void Gomoku::init_dir_map() {
         {"NE", make_tuple(-1, 0)}, {"SW", make_tuple(1, 0)},
         {"W_b", make_tuple(0, -1)}, {"E_b", make_tuple(0, 1)},
         {"NW_b", make_tuple(-1, 0)}, {"SE_b", make_tuple(1, 0)},
-        {"NE_b", make_tuple(-1, 1)}, {"SE_b", make_tuple(1, -1)}
+        {"NE_b", make_tuple(-1, 1)}, {"SW_b", make_tuple(1, -1)}
     };
     update_dir_map = {
         {"row", make_tuple(0, 1)}, {"diag", make_tuple(1, 1)}, 

@@ -26,7 +26,7 @@ class Gomoku {
         void get_index_map();
         tuple<int, int, int> currentGame();
         bool updateBoard(int pos);
-        void revert(int lastPos);
+        void revert(tuple<int, int> lastPos);
         int isEnd(bool debug=false);
         void clear(int first_player);
         map<string, vector<int> > updateFeature(tuple<int, int> pos_index);
