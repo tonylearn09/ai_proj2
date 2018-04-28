@@ -5,7 +5,7 @@ MinimaxPolicy::MinimaxPolicy(int depth_) {
     depth = depth_;
 }
 
-MinimaxPolicy::getNextAction(Gomoku game, map<int, float> weights) {
+int MinimaxPolicy::getNextAction(Gomoku game, map<int, float> weights) {
     pair<float, int> val_act = recurseAlphaBeta(game, 0, -FLT_MAX, FLT_MAX, weights);
     return val_act.second;
 } 
