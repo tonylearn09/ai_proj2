@@ -192,9 +192,9 @@ int Gomoku::isEnd(bool debug) {
 
     //if (debug)
         //cout << count << endl;
-    if ((count["W"] + count["E"] >= 6) ||
-            (count["NW"] + count["SE"] >= 6) ||
-            (count["NE"] + count["SW"] >= 6)) 
+    if ((count1["W"] + count2["E"] >= 6) ||
+            (count1["NW"] + count2["SE"] >= 6) ||
+            (count1["NE"] + count2["SW"] >= 6)) 
         return lastPlayer;
     else
         return -1;

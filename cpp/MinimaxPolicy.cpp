@@ -67,7 +67,7 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
     pair<float, int> maxPair = make_pair(-FLT_MAX, -1);
     pair<float, int> minPair = make_pair(FLT_MAX, -1);
     for (int k = 0; k < 217; k++) {
-        res = game.updateBoard(k);
+        bool res = game.updateBoard(k);
         if (res) {
             pair<float, int> r_val_act;
             if (player == const_agentId) {
