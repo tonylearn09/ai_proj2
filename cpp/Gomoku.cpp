@@ -151,19 +151,35 @@ int Gomoku::isEnd(bool debug) {
 
     if (totalSteps[0] + totalSteps[1] >= 217)
         return 0;
-    map<string, int> count = {
-        {"W", 0}, {"E", 0}, 
-        {"NW", 0}, {"SE", 0},
-        {"NE", 0}, {"SW", 0}
+    map<string, int> count1 = {
+        {"W", 0}, {"NW", 0}, {"NE", 0},
+    };
+    map<string, int> count2 = {
+        {"E", 0}, {"SE", 0}, {"SW", 0}
     };
 
     int lastPlayer = 3 - nextPlayer;
-    for (auto const& d: count) {
+    for (auto const& d: count1) {
         int i = get<0>(lastMove);
         int j = get<1>(lastMove);
         while (boardState(i, j) == lastPlayer) {
-            count[d.first] += 1;
-            if (i < 8 ) {
+            count1[d.first] += 1;
+            if (i <= 8) {
+                // top half
+                i += get<0>(is_end_check_dir_map[d.first]);
+                j += get<1>(is_end_check_dir_map[d.first]);
+            } else {
+                i += get<0>(is_end_check_dir_map[d.first+"_b"]);
+                j += get<1>(is_end_check_dir_map[d.first+"_b"]);
+            }
+        }
+    }
+    for (auto const& d: count2) {
+        int i = get<0>(lastMove);
+        int j = get<1>(lastMove);
+        while (boardState(i, j) == lastPlayer) {
+            count2[d.first] += 1;
+            if (i < 8) {
                 // top half
                 i += get<0>(is_end_check_dir_map[d.first]);
                 j += get<1>(is_end_check_dir_map[d.first]);

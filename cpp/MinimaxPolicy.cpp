@@ -5,15 +5,15 @@ MinimaxPolicy::MinimaxPolicy(int depth_) {
     depth = depth_;
 }
 
-MinimaxPolicy::getNextAction(Gomoku game, map<int, int> weights) {
-    pair<float, int> val_act = recurseAlphaBeta(game, 0, -FLT_MAX, FLT_MAX, weights, game.nextPlayer)
+MinimaxPolicy::getNextAction(Gomoku game, map<int, float> weights) {
+    pair<float, int> val_act = recurseAlphaBeta(game, 0, -FLT_MAX, FLT_MAX, weights, game.nextPlayer);
     return val_act.second;
 } 
 
 
 pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d, 
-        float lowerBound, float upperBound, map<int, int> weights, int initial_player) {
-    winner = game.isEnd();
+        float lowerBound, float upperBound, map<int, float> weights, int initial_player) {
+    int winner = game.isEnd();
 
     if (winner == const_agentId)
         return make_pair(FLT_MAX, -1);
@@ -24,7 +24,7 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
         if (weights.empty())
             return make_pair(evalFunc(game), -1);
         else
-            return make_pair(self.evalFunc(game, weights), -1);
+            return make_pair(evalFunc(game, weights), -1);
     }
 
     vector<vector<int> > gomokuboard = game.gomokuboard;
@@ -54,7 +54,6 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
                 choices.push_back(make_pair(self.evalFunc(game), k));
             else
                 choices.push_back(make_pair(self.evalFunc(game, weights), k));
-
             game.revert(lastMove)
         }
     }
@@ -68,28 +67,30 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
     pair<float, int> maxPair = make_pair(-FLT_MAX, -1);
     pair<float, int> minPair = make_pair(FLT_MAX, -1);
     for (int k = 0; k < 217; k++) {
-        game.updateBoard(k);
-        pair<float, int> r_val_act;
-        if (player == const_agentId) {
-            r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights, initial_player);
-            v = r_val_act.first;
-            maxPair = max(maxPair, make_pair(v, k));
-        } else {
-            r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights, initial_player);
-            v = r_val_act.first;
-            minPair = min(minPair, make_pair(v, k));
+        res = game.updateBoard(k);
+        if (res) {
+            pair<float, int> r_val_act;
+            if (player == const_agentId) {
+                r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights, initial_player);
+                float v = r_val_act.first;
+                maxPair = max(maxPair, make_pair(v, k));
+            } else {
+                r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights, initial_player);
+                float v = r_val_act.first;
+                minPair = min(minPair, make_pair(v, k));
+            }
+
+            game.revert(lastMove);
+            if (player == const_agentId && maxPair.first >= upperBound)
+                return maxPair;
+            else if (player != const_agentId and minPair.first <= lowerBound)
+                return minPair;
+
+            if (player == const_agentId)
+                lowerBound = max(lowerBound, maxPair.first);
+            else
+                upperBound = min(upperBound, minPair.first);
         }
-
-        game.revert(lastMove);
-        if (player == const_agentId && maxPair.first >= upperBound)
-            return maxPair;
-        else if (player != const_agentId and minPair.first <= lowerBound)
-            return minPair;
-
-        if (player == const_agentId)
-            lowerBound = max(lowerBound, maxPair.first);
-        else
-            upperBound = min(upperBound, minPair.first);
     }
 
     if (player == const_agentId)
@@ -99,7 +100,7 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
 
 }
 
-int evalFunc(Gomoku game, map<int, int> weights) {
+int MinimaxPolicy::evalFunc(Gomoku game, map<int, float> weights) {
     vector<int> agentCount = game.winningCount[const_agentId - 1];
     vector<int> oppoCount = game.winningCount[const_oppoId - 1];
 
