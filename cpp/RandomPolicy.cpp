@@ -15,4 +15,3 @@ int RandomPolicy::getNextAction(Gomoku game) {
             return pos;
     }
 }
-

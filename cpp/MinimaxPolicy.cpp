@@ -6,19 +6,21 @@ MinimaxPolicy::MinimaxPolicy(int depth_) {
 }
 
 MinimaxPolicy::getNextAction(Gomoku game, map<int, float> weights) {
-    pair<float, int> val_act = recurseAlphaBeta(game, 0, -FLT_MAX, FLT_MAX, weights, game.nextPlayer);
+    pair<float, int> val_act = recurseAlphaBeta(game, 0, -FLT_MAX, FLT_MAX, weights);
     return val_act.second;
 } 
 
 
 pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d, 
-        float lowerBound, float upperBound, map<int, float> weights, int initial_player) {
+        float lowerBound, float upperBound, map<int, float> weights) {
     int winner = game.isEnd();
 
     if (winner == const_agentId)
         return make_pair(FLT_MAX, -1);
-    else if (winner >= 0)
+    else if (winner == const_oppoId)
         return make_pair(-FLT_MAX, -1);
+    else if (winner == 0)
+    	return make_pair(0.0, -1);
 
     if (d == depth) {
         if (weights.empty())
@@ -32,18 +34,12 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
     int player = game.nextPlayer;
 
     int nextd;
-    if (initial_player == const_agentId) {
-        if (player == const_oppoId)
-            nextd = d + 1;
-        else
-            nextd = d;
-    } else if (initial_player == const_oppoId) {
-        if (player == const_agentId)
-            nextd = d + 1;
-        else
-            nextd = d;
-    }
-
+    
+    if (player == const_oppoId)
+        nextd = d + 1;
+    else
+        nextd = d;
+  
     /*
     vector<pair<float, int> > choices;
     for (int k = 0; k < 217; k++) {
@@ -71,19 +67,22 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
         if (res) {
             pair<float, int> r_val_act;
             if (player == const_agentId) {
-                r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights, initial_player);
+                r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights);
                 float v = r_val_act.first;
-                maxPair = max(maxPair, make_pair(v, k));
+                if (v > maxPair.first)
+                	maxPair = make_pair(v, k);
+                
             } else {
-                r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights, initial_player);
+                r_val_act = recurseAlphaBeta(game, nextd, lowerBound, upperBound, weights);
                 float v = r_val_act.first;
-                minPair = min(minPair, make_pair(v, k));
+                if (v < minPair.first)
+                	minPair = make_pair(v, k);
             }
 
             game.revert(lastMove);
             if (player == const_agentId && maxPair.first >= upperBound)
                 return maxPair;
-            else if (player != const_agentId and minPair.first <= lowerBound)
+            else if (player != const_agentId && minPair.first <= lowerBound)
                 return minPair;
 
             if (player == const_agentId)
@@ -100,11 +99,11 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
 
 }
 
-int MinimaxPolicy::evalFunc(Gomoku game, map<int, float> weights) {
+float MinimaxPolicy::evalFunc(Gomoku game, map<int, float> weights) {
     vector<int> agentCount = game.winningCount[const_agentId - 1];
     vector<int> oppoCount = game.winningCount[const_oppoId - 1];
 
-    double total = 0.0;
+    float total = 0.0;
     for (auto const& x : weights) {
         total += x.second * agentCount[x.first];
         total -= x.second * oppoCount[x.first];

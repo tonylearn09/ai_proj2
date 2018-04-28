@@ -105,6 +105,7 @@ bool Gomoku::updateBoard(int pos) {
     }
 
     totalSteps[nextPlayer - 1] += 1;
+    //cout << totalSteps[0] << " " << totalSteps[1] << endl;
     lastMove = pos_index;
 
     prevWinningCount.push_back(winningCount);
@@ -148,8 +149,8 @@ int Gomoku::isEnd(bool debug) {
     // 0 - break even
     // 1 - player 1 wins
     // 2 - player 2 wins
-
-    if (totalSteps[0] + totalSteps[1] >= 217)
+	//cout << totalSteps[0]+totalSteps[1] << endl;
+    if ((totalSteps[0] + totalSteps[1]) >= 217)
         return 0;
     map<string, int> count1 = {
         {"W", 0}, {"NW", 0}, {"NE", 0},
