@@ -16,9 +16,9 @@ pair<float, int> MinimaxPolicy::recurseAlphaBeta(Gomoku game, int d,
     int winner = game.isEnd();
 
     if (winner == const_agentId)
-        return make_pair(FLT_MAX, -1);
+        return make_pair(FLT_MAX*0.9, -1);
     else if (winner == const_oppoId)
-        return make_pair(-FLT_MAX, -1);
+        return make_pair(-FLT_MAX*0.9, -1);	
     else if (winner == 0)
     	return make_pair(0.0, -1);
 

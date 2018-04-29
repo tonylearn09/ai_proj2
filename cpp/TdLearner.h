@@ -2,19 +2,22 @@
 #define TD_LEARNER_H
 
 #include <map>
+#include <string>
 #include "Gomoku.h"
 
 using namespace std;
 
 class TdLearner {
     public:
-        TdLearner(float eta = 0.01, float gamma = 0.9);
-        void learning(int numTrails = 50, 
-                map<int, float> weights = {{1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}});
+        TdLearner(float eta = 0.01, float gamma = 0.9, string weight_filename="weight.txt");
+        void learning(int numTrails = 50);
 
     private:
+        void save_weight();
         float eta_;
         float gamma_;
+        string weight_filename_;
+        map<int, float> weights;
 };
 
 #endif
