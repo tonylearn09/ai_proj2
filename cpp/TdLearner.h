@@ -9,7 +9,7 @@ using namespace std;
 
 class TdLearner {
     public:
-        TdLearner(float eta = 0.01, float gamma = 0.9, string weight_filename="weight.txt");
+        TdLearner(float eta = 0.001, float gamma = 0.9, string weight_filename="weight.txt");
         void learning(int numTrails = 50);
 
     private:

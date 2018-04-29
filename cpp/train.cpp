@@ -5,7 +5,7 @@
 int main() {
     
     srand((unsigned)time(NULL));
-    TdLearner td(0.01, 0.9, "weight.txt");
+    TdLearner td(0.001, 0.9, "weight.txt");
     td.learning(50);
     return 0;
 }

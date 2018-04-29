@@ -21,9 +21,11 @@ TdLearner::TdLearner(float eta, float gamma, string weight_filename) {
         weight_file.close();
     } else {
         weights = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
+        //weights = {{0,0.0}, {1,0.0}, {2,0.0}, {3,0.0}, {4,0.0}, {5,5.0}};
     }
 
     // Check weight
+    cout << "Initial weights" << endl;
     cout << "[" << endl;
     for (auto &x: weights) {
         cout << x.first << ": " << fixed << setprecision(2) << x.second << ", ";
@@ -33,7 +35,8 @@ TdLearner::TdLearner(float eta, float gamma, string weight_filename) {
 
 void TdLearner::learning(int numTrails) {
     MinimaxPolicy agentPolicy(1);
-    RandomPolicy oppoPolicy;
+    //RandomPolicy oppoPolicy;
+    MinimaxPolicy oppoPolicy(1);
 
     for (int t = 0; t < numTrails; t++) {
         Gomoku newGame(1);
@@ -42,7 +45,35 @@ void TdLearner::learning(int numTrails) {
                 //newGame.winningCount[const_oppoId-1].end());
         float Vs2 = 0.0;
         float reward = 0.0;
+        bool end_game = false;
         while (1) {
+            if (end_game) {
+                if (newGame.isEnd() >= 0) {
+                    /*
+                    tuple<int,int,int> state = newGame.currentGame();
+                    int losePlayer = get<0>(state);
+                    if (losePlayer == const_agentId)
+                        reward = -30;
+                    else
+                        reward = 30;
+                    */
+                    int end_state = newGame.isEnd();
+                    if (end_state == 0)
+                        reward = 0.0;
+                    else if (end_state == 1)
+                        reward = 30.0;
+                    else if (end_state == 2)
+                        reward = -30.0;
+                    else
+                        cout << "No this end state" << endl;
+
+                }
+                for (auto &x: weights) {
+                    if (x.first != 0)
+                        weights[x.first] = weights[x.first] - eta_ * (Vs2 - reward) * phi2[x.first] / (t + 1);
+                }
+                break;
+            }
             int nextPlayer = newGame.nextPlayer;
             float Vs1 = Vs2;
             vector<int> phi1 = phi2;
@@ -60,19 +91,33 @@ void TdLearner::learning(int numTrails) {
 
             Vs2 = evalFunc(newGame, weights);
 
-            if (newGame.isEnd() >= 0) {
+            int end_state = newGame.isEnd();
+            /*if (end_state >= 0) {
                 tuple<int,int,int> state = newGame.currentGame();
                 int losePlayer = get<0>(state);
                 if (losePlayer == const_agentId)
                     reward = -30;
                 else
                     reward = 30;
-            }
+
+                if (end_state == 0)
+                    reward = 0.0;
+                else if (end_state == 1)
+                    reward = 30.0;
+                else if (end_state == 2)
+                    reward = -30.0;
+                else
+                    cout << "No this end state" << endl;
+
+            }*/
             for (auto &x: weights) {
-                weights[x.first] = weights[x.first] - eta_ * (Vs1 - reward - gamma_ * Vs2) * phi1[x.first] / (t + 1);
+                if (x.first != 0)
+                    weights[x.first] = weights[x.first] - eta_ * (Vs1 - reward - gamma_ * Vs2) * phi1[x.first] / (t + 1);
             }
-            if (newGame.isEnd() >= 0)
-                break;
+            if (end_state >= 0) {
+                end_game = true;
+                //break;
+            }
         }
 
         tuple<int,int,int> state = newGame.currentGame();
@@ -80,6 +125,7 @@ void TdLearner::learning(int numTrails) {
         int totalStep0 = get<1>(state);
         //int totalStep1 = get<2>(state);
         int winPlayer = 3 - losePlayer;
+        cout << "Trial " << t  << " :" << endl;
         if (newGame.isEnd() != 0)
             cout << ">>>player " << winPlayer << " wins with steps " << totalStep0 << endl;
         else
