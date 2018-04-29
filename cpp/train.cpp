@@ -1,8 +1,11 @@
 #include "Gomoku.h"
 #include "TdLearner.h"
+#include <time.h>
 
 int main() {
-    TdLearner td(0.01, 0.9);
-    td.learning(100);
+    
+    srand((unsigned)time(NULL));
+    TdLearner td(0.01, 0.9, "weight.txt");
+    td.learning(50);
     return 0;
 }
