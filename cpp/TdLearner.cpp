@@ -132,6 +132,7 @@ void TdLearner::learning(int numTrails) {
             cout << ">>>break even!" << endl;
         cout << "current weights: [" << endl;
         for (auto &x: weights) {
+        	
             cout << x.first << ": " << fixed << setprecision(2) << x.second << ", ";
         }
         cout << "]" << endl;
@@ -153,4 +154,3 @@ void TdLearner::save_weight() {
         cout << "Cannot write to " << weight_filename_ << endl;
     }
 }
-
