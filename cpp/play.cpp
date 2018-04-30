@@ -20,11 +20,11 @@ int main(){
     ifstream weight_file("best.txt");
     if (weight_file.is_open()) {
         for (int key = 0; key < 6; key++) {
-            weight_file >> weights1[key];
+            weight_file >> weights[key];
         }
         weight_file.close();
     } else {
-        weights1 = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
+        weights = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
     }
 
 
