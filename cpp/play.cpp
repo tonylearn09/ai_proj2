@@ -15,8 +15,9 @@ int main(){
     vector<int> numSteps(2);
     srand((unsigned)time(NULL));
     
-    map<int, float> weights1;
-    ifstream weight_file("weight1.txt");
+
+    map<int, float> weights;
+    ifstream weight_file("best.txt");
     if (weight_file.is_open()) {
         for (int key = 0; key < 6; key++) {
             weight_file >> weights1[key];
@@ -25,15 +26,17 @@ int main(){
     } else {
         weights1 = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
     }
-    map<int, float> weights2;
-    ifstream weight_file2("weight2.txt");
-    if (weight_file2.is_open()) {
+
+
+    map<int, float> weights1;
+    ifstream weight_file1("weight.txt");
+    if (weight_file1.is_open()) {
         for (int key = 0; key < 6; key++) {
-            weight_file2 >> weights2[key];
+            weight_file1 >> weights1[key];
         }
-        weight_file2.close();
+        weight_file1.close();
     } else {
-        weights2 = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
+        weights1 = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
     }
 
     for (int i = 0; i < iteration; i++) {
@@ -52,24 +55,25 @@ int main(){
             //start = time.time()
             int action = -1;
             
-            if (nextPlayer == 1){
+            if (nextPlayer == 1) {
             
                 /*if (init) {
                     init = false;
                     action = 108;
                 } else*/
-                    //action = minimaxPolicy.getNextAction(newGame, weights1);        
-                    cout << "turn: ";
-            	cin >> action;
+
+                    //action = minimaxPolicy.getNextAction(newGame);        
+                action = minimaxPolicy.getNextAction(newGame, weights);
                 //action = minimaxPolicy.getNextAction(newGame)
                 //print "player 1 selects ", action
-            }else {
-				action = minimaxPolicy.getNextAction(newGame, weights1);
-            	
-        	}
-                //action = minimaxPolicy.getNextAction(newGame, weights2);
+            } else {
+                //cout << "Human turn (position): ";
+                //cin >> action;
+                action = minimaxPolicy.getNextAction(newGame, weights1);        
+
                 //action = baselinePolicy.getNextAction(newGame)
                 //print "player 2 selects ", action
+            }
             //print time.time() - start
             //time_to_move[nextPlayer - 1].append(time.time() - start)
             //print "player %d places on (%d, %d)"%(nextPlayer, action[0], action[1])
@@ -80,7 +84,7 @@ int main(){
             //cout << newGame.isEnd() << endl;
             newGame.print_board();
             tuple<int,int,int> state = newGame.currentGame();
-            int losePlayer = get<0>(state);
+            //int losePlayer = get<0>(state);
             int totalStep0 = get<1>(state);
             int totalStep1 = get<2>(state);
             //cout << totalStep0 + totalStep1 << endl;
@@ -96,16 +100,15 @@ int main(){
         int winPlayer = 3 - losePlayer;
         if (newGame.isEnd() != 0) {
             numberWin[winPlayer-1] += 1;
-            const int j = winPlayer-1;
             if (winPlayer == 1) {
                 numSteps[winPlayer-1] = totalStep0;
             } else if(winPlayer == 2) {
                 numSteps[winPlayer-1] = totalStep1;
             }
             
-            cout << "#### player "<< winPlayer << "wins" << endl;
+            cout << "#### player "<< winPlayer << " wins" << endl;
         } else {
-            cout << "break even!";
+            cout << "break even!" << endl;
         }
         newGame.print_board();
         //print(newGame.isEnd())
