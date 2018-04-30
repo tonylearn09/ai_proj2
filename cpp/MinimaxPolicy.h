@@ -23,7 +23,7 @@ class MinimaxPolicy {
 };
 
 float evalFunc(Gomoku game, 
-        map<int, float> weights={{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}}
+        map<int, float> weights={{0,0.0}, {1,1.0}, {2,4.0}, {3,9.0}, {4,16.0}, {5,25.0}}
 );
 
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "Gomoku.h"
 
 using namespace std;
@@ -86,6 +87,15 @@ void Gomoku::get_index_map() {
     for (int i = 208; i < 208+9; i++) {
         index_map[i] = make_tuple(16, i-208);
     }
+    /*
+    ofstream file("map.txt");
+    if (file.is_open()) {
+        for (auto &x: index_map) {
+            file << x.first << ": " << "(" << get<0>(x.second) << ", " << get<1>(x.second) << ")" << endl;
+        }
+        file.close();
+    }
+	*/ 
 }
 
 tuple<int, int, int> Gomoku::currentGame() {

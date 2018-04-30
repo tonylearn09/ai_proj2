@@ -15,15 +15,25 @@ int main(){
     vector<int> numSteps(2);
     srand((unsigned)time(NULL));
     
-    map<int, float> weights;
-    ifstream weight_file("weight.txt");
+    map<int, float> weights1;
+    ifstream weight_file("weight1.txt");
     if (weight_file.is_open()) {
         for (int key = 0; key < 6; key++) {
-            weight_file >> weights[key];
+            weight_file >> weights1[key];
         }
         weight_file.close();
     } else {
-        weights = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
+        weights1 = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
+    }
+    map<int, float> weights2;
+    ifstream weight_file2("weight2.txt");
+    if (weight_file2.is_open()) {
+        for (int key = 0; key < 6; key++) {
+            weight_file2 >> weights2[key];
+        }
+        weight_file2.close();
+    } else {
+        weights2 = {{0,0.0}, {1,1.0}, {2,2.0}, {3,3.0}, {4,4.0}, {5,5.0}};
     }
 
     for (int i = 0; i < iteration; i++) {
@@ -48,11 +58,16 @@ int main(){
                     init = false;
                     action = 108;
                 } else*/
-                    action = minimaxPolicy.getNextAction(newGame);        
+                    //action = minimaxPolicy.getNextAction(newGame, weights1);        
+                    cout << "turn: ";
+            	cin >> action;
                 //action = minimaxPolicy.getNextAction(newGame)
                 //print "player 1 selects ", action
-            }else
-                action = minimaxPolicy.getNextAction(newGame, weights);
+            }else {
+				action = minimaxPolicy.getNextAction(newGame, weights1);
+            	
+        	}
+                //action = minimaxPolicy.getNextAction(newGame, weights2);
                 //action = baselinePolicy.getNextAction(newGame)
                 //print "player 2 selects ", action
             //print time.time() - start
@@ -63,12 +78,12 @@ int main(){
             //inp = input('Enter')
             //cout << action << endl;
             //cout << newGame.isEnd() << endl;
-            //newGame.print_board();
+            newGame.print_board();
             tuple<int,int,int> state = newGame.currentGame();
             int losePlayer = get<0>(state);
             int totalStep0 = get<1>(state);
             int totalStep1 = get<2>(state);
-            cout << totalStep0 + totalStep1 << endl;
+            //cout << totalStep0 + totalStep1 << endl;
             //system("pause");
         }
         //cout << newGame.isEnd() << endl;
@@ -95,7 +110,7 @@ int main(){
         newGame.print_board();
         //print(newGame.isEnd())
     }
-    //system("pause");
+    system("pause");
     return 0;
 }
 
