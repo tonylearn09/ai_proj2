@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Gomoku.h"
-#include "Minimaxpolicy.h"
+#include "MinimaxPolicy.h"
 #include <fstream>
 
 
