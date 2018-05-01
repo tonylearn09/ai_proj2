@@ -283,6 +283,7 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
 }
 
 
+
 bool NegamaxPlayer::time_out() {
     return difftime(time(NULL), startTime) >= max_time;
 }

@@ -22,6 +22,7 @@ class Move {
         Move(const Move&);
 
         bool operator==(const Move& rhs) const;
+        bool operator<(const Move& rhs) const;
 
         bool equals(const Move& rhs);
 
