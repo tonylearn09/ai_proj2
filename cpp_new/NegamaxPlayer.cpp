@@ -116,11 +116,9 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
 
 long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
 
-    
     if (time_out()) {
         throw string("time out");
     }
-    
 
     //totalNodeCount++;
     if (state.terminal() != 0 || depth == 0) {
@@ -143,11 +141,9 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
         state.makeMove(hashMoveEntry.move);
         try {
             value = -negamax(state, depth - 1, -beta, -alpha);
-            
         } catch (string e) {
             throw e;
         }
-        
         state.undoMove(hashMoveEntry.move);
         if (value > best) {
             bestMove = hashMoveEntry.move;
@@ -165,11 +161,9 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
         state.makeMove(move);
         try {
             value = -negamax(state, depth - 1, -beta, -alpha);
-            
         } catch (string e) {
             throw e;
         }
-        
         state.undoMove(move);
         if(value > best) {
             bestMove = move;
@@ -217,11 +211,9 @@ void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
         state.makeMove(move.move);
         try {
             move.score = -negamax(state, depth - 1, -beta, -alpha);
-            
         } catch (string e) {
             throw e;
         }
-        
         state.undoMove(move.move);
         if(move.score > best) best = move.score;
         if(best > alpha) alpha = best;
@@ -252,11 +244,9 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
         try {
             //moves = searchMoves(state, moves, i);
             searchMoves(state, moves, i);
-            
         } catch (string e) {
             break;
         }
-        
     }
     return moves[0];
 }
@@ -338,8 +328,8 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
 		}
 	}
     // Run a depth increasing search
-    //Move best = iterativeDeepening(2, 16);
-    Move best = iterativeDeepening(2, 8);
+    Move best = iterativeDeepening(2, 16);
+    //Move best = iterativeDeepening(1, 3);
     return best;
 }
 

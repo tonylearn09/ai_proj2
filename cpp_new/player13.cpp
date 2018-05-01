@@ -25,7 +25,7 @@ int main() {
     
 	while(1) {
 		int buffer;
-		fstate = fopen("state_14.txt","r");
+		fstate = fopen("state_13.txt","r");
 		if ( fstate == NULL ) { 
 			printf("read state error! \n"); 
 			continue;
@@ -64,7 +64,6 @@ int main() {
 				 	if (pre_data[i] != data[i]) {
 				 		//update board
 	 					newGame.updateBoard(i);
-	 					cout << i << endl;
 	 					//printf("oppo : %d\n",i);
 	 					//newGame.print_board();
 	 					//system("pause");
@@ -98,11 +97,10 @@ int main() {
 			 }
 	 		pre_step = step;
 	 		//move step
-	 		fmove = fopen("move_14.txt","w"); 
+	 		fmove = fopen("move_13.txt","w"); 
 			fprintf (fmove,"%d %d", step, move);
 			fclose(fmove);
 			newGame.updateBoard(move);
-			cout << move << endl;
 			//printf("move: %d\n",move);
 			//newGame.print_board();
 			
@@ -113,10 +111,10 @@ int main() {
 			newGame.clear();
 			//newGame.print_board();
 			//system("pause");
-			for(int i = 0 ; i < 127 ; i++) {
-				pre_data[i] = 0;
-			}
 			pre_step = 0;	
+            for (int i =0; i < 127; i++) {
+                pre_data[i] = 0;
+            }
 		}
 		fclose(fstate);
 	 	
