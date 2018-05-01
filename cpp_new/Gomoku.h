@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <set>
 #include <deque> 
 #include <stack>
@@ -18,13 +19,12 @@ class Gomoku {
         //vector<vector<int> > winningCount;
         //vector<vector<vector<int> > >  prevWinningCount;
 
-        map<int, pair<int, int> > index_map;
-        map<string, pair<int, int> > is_end_check_dir_map;
+        unordered_map<int, Move> index_map;
+        unordered_map<Move, int> reverse_index_map;
+        map<string, Move> is_end_check_dir_map;
         //map<string, pair<int, int> > update_dir_map;
 
         Gomoku();
-        void init_board();
-        void get_index_map();
 
         tuple<int, int, int> currentGame();
         bool updateBoard(int pos);
@@ -40,6 +40,9 @@ class Gomoku {
         int getCurrentIndex();
     private:
         void init_dir_map();
+        void init_board();
+        void init_index_map();
+        void init_reverse_index_map();
 
         // data
         vector<Move> moves;

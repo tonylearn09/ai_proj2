@@ -1,5 +1,6 @@
 #include <ctime>
 #include "RandomPolicy.h"
+#include "Move.h"
 
 using namespace std;
 
@@ -11,11 +12,9 @@ int RandomPolicy::getNextAction(Gomoku game) {
     int agent = game.getCurrentIndex();
     while (1) { 
         int pos = rand() % static_cast<int>(217);
-        tuple<int, int> pair = game.index_map[pos];
-        int x = get<0>(pair);
-        int y = get<1>(pair);
+        Move pair = game.index_map[pos];
 
-        if (game.boardState(x, y) == 0)
+        if (game.boardState(pair.row, pair.col) == 0)
             return pos;
     }
 }

@@ -26,6 +26,22 @@ bool Move::operator==(const Move& rhs) const {
     return (row == rhs.row) && (col == rhs.col);
 }
 
+bool Move::operator<(const Move& rhs) const {
+    if (row < rhs.row) {
+        return true;
+    } else if (row > rhs.row) {
+        return false;
+    } else {
+        if (col < rhs.col) {
+            return true;
+        } else if (col > rhs.col) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
+
 bool Move::equals(const Move& rhs) {
     return (row == rhs.row) && (col == rhs.col);
 }

@@ -3,14 +3,19 @@ CC = g++
 CFLAGS = -g -O3 -std=c++11
 
 SOURCES = Move.cpp State.cpp Field.cpp Evaluater.cpp ThreatPattern.cpp \
-		  ThreatUtils.cpp Gomoku.cpp NegamaxPlayer.cpp RandomPolicy.cpp play.cpp
+		  ThreatUtils.cpp Gomoku.cpp NegamaxPlayer.cpp RandomPolicy.cpp play.cpp player13.cpp
 OBJECTS = Move.o State.o Field.o Evaluater.o ThreatPattern.o \
 		  ThreatUtils.o Gomoku.o NegamaxPlayer.o RandomPolicy.o play.o
+PLAYER_OBJECTS = Move.o State.o Field.o Evaluater.o ThreatPattern.o \
+		  ThreatUtils.o Gomoku.o NegamaxPlayer.o RandomPolicy.o player13.o
 TARGET = play
+PLAYER_TARGET = player13
 
 # Buid rule
-all : $(TARGET)
+all : $(TARGET) $(PLAYER_TARGET)
 $(TARGET) : $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^
+$(PLAYER_TARGET) : $(PLAYER_OBJECTS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 Move.o : Move.h Move.cpp
@@ -33,11 +38,13 @@ RandomPolicy.o : RandomPolicy.h RandomPolicy.cpp
 	$(CC) $(CFLAGS) -c RandomPolicy.cpp
 play.o : Gomoku.h RandomPolicy.h NegamaxPlayer.h Move.h play.cpp
 	$(CC) $(CFLAGS) -c play.cpp
+player13.o : Gomoku.h NegamaxPlayer.h Move.h player13.cpp
+	$(CC) $(CFLAGS) -c player13.cpp
 
 
 # Phony means not a "real" target, it doesn't build anything
 # The phony target "clean" is used to remove all compiled object files.
 .PHONY: clean
 clean:
-	@rm -f $(TARGET) $(OBJECTS)
+	@rm -f $(TARGET) $(OBJECTS) $(PLAYER_TARGET) $(PLAYER_OBJECTS)
 
