@@ -37,17 +37,17 @@ class State {
          * representing this state. Updated automatically as moves are made/unmade.
          * @return Hash value (Long)
          */
-        long long getZobristHash();
+        long long getZobristHash() const ;
         /**
          * Apply a move to this state.
          * @param move Move to apply
          */
-        void makeMove(Move move);
+        void makeMove(const Move& move);
         /**
          * Undo a move on this state.
          * @param move Move to undo
          */
-        void undoMove(Move move);
+        void undoMove(const Move& move);
         /**
          * Return whether or not this field has occupied fields around it, within
          * some given distance. Used to determine if a field on the board is
@@ -57,7 +57,7 @@ class State {
          * @param distance How far to look in each direction, limit 4
          * @return 
          */
-        bool hasAdjacent(int row, int col, int distance);
+        bool hasAdjacent(int row, int col, int distance) const ;
 
 
         /**
@@ -73,13 +73,13 @@ class State {
          * @return 0 if not terminal, index (1/2) of the player who has won, or 3
          * if the board is full
          */
-        int terminal();
+        int terminal() const ;
 
         /**
          * Get the total number of moves made on this state
          * @return # of moves
          */
-        int getMoves();
+        int getMoves() const ;
 
         /**
          * Get a field instance on the board at a given row/col position. For
@@ -88,7 +88,7 @@ class State {
          * @param col Column
          * @return Field instance at given position
          */
-        Field getField(int row, int col);
+        const Field& getField(int row, int col) const ;
 
         void init_board();
         void init_neighbor_map();

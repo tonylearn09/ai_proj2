@@ -9,13 +9,12 @@
 using namespace std;
 
 NegamaxPlayer::NegamaxPlayer() {
-    moveTable.setMaxSize(1000000);
-
     // Set maximum allowable time to 4.0s
     max_time = 4.0;
+    moveTable.setMaxSize(1000000);
 }
 
-vector<Move> NegamaxPlayer::getSortedMoves(State &state) {
+vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
     // Board is empty, return a move in the middle of the board
     if(state.getMoves() == 0) {
         vector<Move> moves;
@@ -115,7 +114,7 @@ vector<Move> NegamaxPlayer::getSortedMoves(State &state) {
 
 }
 
-long NegamaxPlayer::negamax(State state, int depth, long alpha, long beta) {
+long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
 
     /*
     if (time_out()) {
@@ -123,11 +122,11 @@ long NegamaxPlayer::negamax(State state, int depth, long alpha, long beta) {
     }
     */
 
-    totalNodeCount++;
+    //totalNodeCount++;
     if (state.terminal() != 0 || depth == 0) {
         return evaluator.evaluateState(state, depth);
     }
-    nonLeafCount++;
+    //nonLeafCount++;
 
     int value;
     long best = LONG_MIN;
@@ -181,7 +180,7 @@ long NegamaxPlayer::negamax(State state, int depth, long alpha, long beta) {
             break;
         }
     }
-    branchesExploredSum += count;
+    //branchesExploredSum += count;
     putMoveEntry(state.getZobristHash(), bestMove, depth);
     return best;
 }
@@ -203,7 +202,8 @@ void NegamaxPlayer::putMoveEntry(long long key, Move move, int depth) {
 }
 
 
-vector<Move> NegamaxPlayer::searchMoves(State &state, vector<Move> moves, int depth) {
+//vector<Move> NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
+void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
     vector<ScoredMove> scoredMoves;
     for(Move &move : moves) {
         scoredMoves.push_back(ScoredMove(move, LONG_MIN));
@@ -232,7 +232,7 @@ vector<Move> NegamaxPlayer::searchMoves(State &state, vector<Move> moves, int de
 
     moves.clear();
     for(ScoredMove move : scoredMoves) moves.push_back(move.move);
-    return moves;
+    //return moves;
 }
 
 Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
@@ -250,7 +250,8 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
         if (time_out())
             break;
         //try {
-            moves = searchMoves(state, moves, i);
+            //moves = searchMoves(state, moves, i);
+            searchMoves(state, moves, i);
             /*
         } catch (string e) {
             break;
@@ -260,12 +261,12 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
     return moves[0];
 }
 
-Move NegamaxPlayer::getMove(Gomoku gameState) {
+Move NegamaxPlayer::getMove(const Gomoku& gameState) {
 
     // Reset performance counts, clear the hash table
-    totalNodeCount = 0;
-    nonLeafCount = 0;
-    branchesExploredSum = 0;
+    //totalNodeCount = 0;
+    //nonLeafCount = 0;
+    //branchesExploredSum = 0;
     moveTable.clear();
 
     // Create a new internal state object, sync with the game state
@@ -277,7 +278,7 @@ Move NegamaxPlayer::getMove(Gomoku gameState) {
 
     // Run a depth increasing search
     //Move best = iterativeDeepening(2, 16);
-    Move best = iterativeDeepening(1, 2);
+    Move best = iterativeDeepening(1, 3);
     return best;
 }
 

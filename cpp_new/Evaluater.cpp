@@ -5,7 +5,7 @@ Evaluator::Evaluator() {
 }
 
 
-int Evaluator::scoreDirection(vector<shared_ptr<Field> > &direction, int index) {
+int Evaluator::scoreDirection(const vector<shared_ptr<Field> > &direction, int index) {
     int score = 0;
     // Pass a window of 5 across the field array
     for(int i = 0; (i + 4) < direction.size(); i++) {
@@ -33,9 +33,10 @@ int Evaluator::scoreDirection(vector<shared_ptr<Field> > &direction, int index) 
     return score;
 }
 
-long Evaluator::evaluateState(State state, int depth) {
+long Evaluator::evaluateState(const State& state, int depth) {
     int playerIndex = state.currentIndex;
-    int opponentIndex = playerIndex == 1 ? 2 : 1;
+    //int opponentIndex = playerIndex == 1 ? 2 : 1;
+    int opponentIndex = 3 - playerIndex;
 
      // Check for a winning/losing position
     int terminal = state.terminal();
@@ -57,7 +58,7 @@ long Evaluator::evaluateState(State state, int depth) {
     return score;
 
 }
-long Evaluator::evaluateField(State state, int row, int col, int index) {
+long Evaluator::evaluateField(const State& state, int row, int col, int index) {
     long score = 0;
     for(int direction = 0; direction < 3; direction++) {
         score += scoreDirection(state.directions[row][col][direction],

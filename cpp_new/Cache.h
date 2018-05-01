@@ -19,8 +19,6 @@ template <typename KeyType, typename ValueType> class Cache {
 
         void clear();
 
-
-        // to be launched periodically
     private:
         std::unordered_map<KeyType, ValueType> cache_map;
         std::deque<std::pair<typename std::unordered_map<KeyType, ValueType>::iterator, time_t> > track_deque;

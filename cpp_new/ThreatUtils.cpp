@@ -19,27 +19,27 @@ ThreatUtils::ThreatUtils() {
     REFUTATIONS.push_back(ThreatPattern({0, 0, 1, 1, 1}, {0, 1} ));
 }
 
-vector<Move> ThreatUtils::getThrees(State state, shared_ptr<Field> field, int playerIndex) {
+vector<Move> ThreatUtils::getThrees(const State& state, const shared_ptr<Field>& field, int playerIndex) {
     return getThreatMoves(THREES, state, field, playerIndex);
 }
 
-vector<Move> ThreatUtils::getFours(State state, shared_ptr<Field> field, int playerIndex) {
+vector<Move> ThreatUtils::getFours(const State& state, const shared_ptr<Field>& field, int playerIndex) {
     return getThreatMoves(FOURS, state, field, playerIndex);
 }
 
-vector<Move> ThreatUtils::getRefutations(State state, shared_ptr<Field> field, int playerIndex) {
+vector<Move> ThreatUtils::getRefutations(const State& state, const shared_ptr<Field>& field, int playerIndex) {
     return getThreatMoves(REFUTATIONS, state, field, playerIndex);
 }
 
 
-vector<Move> ThreatUtils::getThreatMoves(vector<ThreatPattern> patternList, State
-        state, shared_ptr<Field> field, int playerIndex) {
+vector<Move> ThreatUtils::getThreatMoves(const vector<ThreatPattern>& patternList, const State&
+        state, const shared_ptr<Field>& field, int playerIndex) {
     vector<Move> threatMoves;
     // Loop around the field in every direction
     // (diagonal/horizontal/vertical)
     for(int direction = 0; direction < 3; direction++) {
         vector<shared_ptr<Field> > directionArray = state.directions[field->row][field->col][direction];
-        for(ThreatPattern& pattern : patternList) {
+        for(const ThreatPattern& pattern : patternList) {
             // Try to find the pattern
             int patternIndex = matchPattern(directionArray, pattern.getPattern(playerIndex));
             if(patternIndex != -1) {
@@ -56,7 +56,7 @@ vector<Move> ThreatUtils::getThreatMoves(vector<ThreatPattern> patternList, Stat
     return threatMoves;
 }
 
-int ThreatUtils::matchPattern(vector<shared_ptr<Field> > &direction, vector<int> pattern) {
+int ThreatUtils::matchPattern(const vector<shared_ptr<Field> >& direction, const vector<int>& pattern) {
     for(int i = 0; i < direction.size(); i++) {
         // Check if the pattern lies within the bounds of the direction
         if(i + (pattern.size() - 1) < direction.size()) {

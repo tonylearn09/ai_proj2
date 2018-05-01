@@ -33,10 +33,9 @@ class Gomoku {
         int isEnd();
         void clear();
         int boardState(int pos_x, int pos_y);
-        //map<string, vector<int> > updateFeature(tuple<int, int> pos_index);
         void print_board();
 
-        vector<Move> getMoves();
+        const vector<Move>& getMoves() const ;
         Move getLastMove();
         int getCurrentIndex();
     private:

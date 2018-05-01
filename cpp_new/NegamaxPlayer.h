@@ -17,7 +17,7 @@ using namespace std;
 class NegamaxPlayer {
     public:
         NegamaxPlayer();
-        Move getMove(Gomoku gameState);
+        Move getMove(const Gomoku& gameState);
     private:
         /**
          * Generate a list of sorted and pruned moves for this state. Moves are
@@ -26,7 +26,7 @@ class NegamaxPlayer {
          * @param state State to get moves for
          * @return A list of moves, sorted and pruned
          */
-        vector<Move> getSortedMoves(State &state);
+        vector<Move> getSortedMoves(const State& state);
          /**
           * Run the negamax algorithm for a node in the game tree.
           * @param state Node to search
@@ -36,7 +36,7 @@ class NegamaxPlayer {
           * @return Score of the node
           * @throws InterruptedException Timeout or interrupted by the user
           */
-        long negamax(State state, int depth, long alpha, long beta);
+        long negamax(State& state, int depth, long alpha, long beta);
 
         /**
          * Place the best move found from a state into the hash table, replacing
@@ -53,7 +53,8 @@ class NegamaxPlayer {
          * @param depth Depth to search to
          * @return Original move list sorted by best score first
          */
-        vector<Move> searchMoves(State &state, vector<Move> moves, int depth);
+        //vector<Move> searchMoves(State &state, vector<Move> moves, int depth);
+        void searchMoves(State &state, vector<Move>& moves, int depth);
 
         /**
          * Run negamax for an increasing depth, sorting the moves after every
@@ -96,9 +97,9 @@ class NegamaxPlayer {
         float max_time;
         time_t startTime;
 
-        long totalNodeCount;
-        long nonLeafCount;
-        long branchesExploredSum;
+        //long totalNodeCount;
+        //long nonLeafCount;
+        //long branchesExploredSum;
 
         State state;
 

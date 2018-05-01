@@ -14,25 +14,25 @@ class ThreatPattern {
          *      threat, i.e. the indices of all 0's in the
          *      pattern array
          */
-        ThreatPattern(vector<int> pattern, vector<int> patternSquares);
+        ThreatPattern(const vector<int>& pattern, const vector<int>&  patternSquares);
         /**
          * Get the pattern from the perspective of a player.
          * @param playerIndex Player identifier
          * @return Pattern array
          */
-        vector<int>& getPattern(int playerIndex);
+        const vector<int>& getPattern(int playerIndex) const;
         /**
          * Return the offensive/defensive square indices in the pattern.
          * @return int[] containing all the square indices
          */
-        vector<int>& getPatternSquares();
+        const vector<int>& getPatternSquares() const;
     private:
         /**
          * Convert an input pattern to player 2's perspective.
          * @param pattern Input pattern array
          * @return Same array with every 1 turned into a 2
          */
-        vector<int> switchPattern(vector<int> pattern);
+        vector<int> switchPattern(const vector<int>& pattern);
         vector<vector<int> >  pattern;
         vector<int> patternSquares;
 };

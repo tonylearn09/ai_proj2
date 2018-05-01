@@ -18,13 +18,6 @@ Gomoku::Gomoku() {
     //lastMove   = make_pair(-1, -1);
     totalSteps = vector<int>(2); // (agent, opponent)
 
-    // [[agent count], [opponent count]]
-    /*
-    winningCount.push_back(vector<int>(6));
-    winningCount.push_back(vector<int>(6));
-    winningCount[0][0] = winningCount[1][0] = 217;
-    */
-
     cout << "Finish setting up gameboard" << endl;
 }
 
@@ -89,27 +82,21 @@ void Gomoku::get_index_map() {
     for (int i = 208; i < 208+9; i++) {
         index_map[i] = make_pair(16, i-208);
     }
-    /*
-    ofstream file("map.txt");
-    if (file.is_open()) {
-        for (auto &x: index_map) {
-            file << x.first << ": " << "(" << get<0>(x.second) << ", " << get<1>(x.second) << ")" << endl;
-        }
-        file.close();
-    }
-	*/ 
 }
 
 int Gomoku::getCurrentIndex() {
     return currentIndex;
 }
 
-vector<Move> Gomoku::getMoves() {
+const vector<Move>& Gomoku::getMoves() const {
     return moves;
 }
 
 Move Gomoku::getLastMove() {
-    return moves.back();
+    if (moves.empty())
+        return Move(); // default is row=-1, col=-1
+    else
+        return moves.back();
 }
 
 tuple<int, int, int> Gomoku::currentGame() {
@@ -134,17 +121,6 @@ bool Gomoku::updateBoard(int pos) {
     //cout << totalSteps[0] << " " << totalSteps[1] << endl;
     //lastMove = pos_index;
 
-    /*
-    prevWinningCount.push_back(winningCount);
-    map<string, vector<int> > newWinningCount = updateFeature(pos_index);
-    if (nextPlayer == 1) {
-        winningCount[0] = newWinningCount["agent"];
-        winningCount[1] = newWinningCount["opponent"];
-    } else {
-        winningCount[0] = newWinningCount["opponent"];
-        winningCount[1] = newWinningCount["agent"];
-    }
-    */
     gomokuboard[pos_index_x][pos_index_y] = currentIndex;
     currentIndex = 3 - currentIndex;
 
@@ -167,17 +143,6 @@ bool Gomoku::updateBoard(Move move) {
     //cout << totalSteps[0] << " " << totalSteps[1] << endl;
     //lastMove = pos_index;
 
-    /*
-    prevWinningCount.push_back(winningCount);
-    map<string, vector<int> > newWinningCount = updateFeature(pos_index);
-    if (nextPlayer == 1) {
-        winningCount[0] = newWinningCount["agent"];
-        winningCount[1] = newWinningCount["opponent"];
-    } else {
-        winningCount[0] = newWinningCount["opponent"];
-        winningCount[1] = newWinningCount["agent"];
-    }
-    */
     gomokuboard[pos_index_x][pos_index_y] = currentIndex;
     currentIndex = 3 - currentIndex;
 
@@ -295,206 +260,6 @@ void Gomoku::clear() {
     cout << "Finish clearing up board for restart" << endl ;
 }
 
-/*
-map<string, vector<int> > Gomoku::updateFeature(tuple<int, int> pos_index) {
-    //print(pos_index);
-    int windowSize = 5;
-
-    int agent = nextPlayer;
-    int opponent = 3 - agent;
-
-    vector<int> agentCount = winningCount[agent - 1];
-    vector<int> opponentCount = winningCount[opponent - 1];
-
-    int nextMove_i = get<0>(pos_index);
-    int nextMove_j = get<1>(pos_index);
-
-    set<tuple<int, int> > valid_pos;
-    map<string, tuple<int,int> > startPos; 
-
-    // row
-    for (int delta = 0; delta < 5; delta++) {
-        if (nextMove_j - delta >= 0) {
-            tuple<int,int> valid_tuple = make_tuple(nextMove_i, nextMove_j-delta);
-            valid_pos.insert(valid_tuple);
-            startPos["row"] = valid_tuple;
-        }
-    }
-    for (int delta = 0; delta < 5; delta++) {
-        if (nextMove_j + delta < gomokuboard[nextMove_i].size()) {
-            tuple<int,int> valid_tuple = make_tuple(nextMove_i, nextMove_j+delta);
-            valid_pos.insert(valid_tuple);
-        }
-    }
-
-
-    if (nextMove_i <= 8) {
-        // top half (head)
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i - delta >= 0 && nextMove_j - delta >= 0) {
-                tuple<int,int> valid_tuple = make_tuple(nextMove_i - delta, nextMove_j - delta);
-                valid_pos.insert(valid_tuple);
-                startPos["diag"] = valid_tuple;
-            }
-        }
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i - delta >= 0 && nextMove_j < gomokuboard[nextMove_i-delta].size()) {
-                tuple<int,int> valid_tuple = make_tuple(nextMove_i - delta, nextMove_j);
-                valid_pos.insert(valid_tuple);
-                startPos["rdiag"] = valid_tuple;
-            }
-        }
-
-
-        // top half (tail)
-        // diag
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i + delta > 8) {
-                int y_index = nextMove_j + (8 - nextMove_i);
-                if (y_index < gomokuboard[nextMove_i+delta].size()) {
-                    valid_pos.insert(make_tuple(nextMove_i+delta, y_index));
-                }
-            } else {
-                if (nextMove_j+delta < gomokuboard[nextMove_i+delta].size()) {
-                    valid_pos.insert(make_tuple(nextMove_i+delta, nextMove_j+delta));
-                }
-            }
-        }
-
-        // rdiag
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i + delta >= 8) {
-                int y_index = nextMove_j - (delta - (8 - nextMove_i));
-                if (y_index >= 0) {
-                    valid_pos.insert(make_tuple(nextMove_i+delta, y_index));
-                }
-            } else {
-                valid_pos.insert(make_tuple(nextMove_i+delta, nextMove_j));
-            }
-        }
-
-    } else if (nextMove_i > 8) {
-        // bottom half (head)
-      
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i - delta > 8) {
-                tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, nextMove_j);
-                startPos["diag"] = valid_tuple;
-                valid_pos.insert(valid_tuple);
-            } else {
-                int col_index = nextMove_j - (delta - (nextMove_i - 8));
-                if (col_index >= 0) {
-                    tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, col_index);
-                    startPos["diag"] = valid_tuple;
-                    valid_pos.insert(valid_tuple);
-                }
-            }
-        }
-
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i - delta >= 8) {
-                if (nextMove_j + delta < gomokuboard[nextMove_i-delta].size()) {
-                    tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, nextMove_j+delta);
-                    startPos["rdiag"] = valid_tuple;
-                    valid_pos.insert(valid_tuple);
-                }
-            } else {
-                int col_index = nextMove_j + (nextMove_i - 8);
-                if (col_index < gomokuboard[nextMove_i-delta].size()) {
-                    tuple<int,int> valid_tuple = make_tuple(nextMove_i-delta, col_index);
-                    startPos["rdiag"] = valid_tuple;
-                    valid_pos.insert(valid_tuple);
-                }
-            }
-        }
-
-        // bottome half (tail)
-        for (int delta = 0; delta < 5; delta++) {
-            if (nextMove_i+delta < 17 && nextMove_j < gomokuboard[nextMove_i+delta].size())
-                valid_pos.insert(make_tuple(nextMove_i+delta, nextMove_j));
-            if (nextMove_i+delta < 17 && nextMove_j-delta >= 0)
-                valid_pos.insert(make_tuple(nextMove_i+delta, nextMove_j-delta));
-        }
-    }
-    
-
-    map<int, string> index_dir = {
-        {0, "row"}, {1, "diag"}, {2, "rdiag"}
-    };
-    for (int k = 0; k < 3; k++) {
-        tuple<int,int> pair = startPos[index_dir[k]];
-        int i = get<0>(pair);
-        int j = get<1>(pair);
-        int initial = 0;
-        map<string, int> windowCount = {{"agent", 0}, {"opponent", 0}};
-        deque<tuple<int, int> > prev_history;
-        prev_history.push_back(make_tuple(-1, -1)); //dummy
-        prev_history.push_back(make_tuple(i, j));
-
-        while (valid_pos.find(make_tuple(i, j)) != valid_pos.end()) {
-            
-            if (initial < windowSize - 1 ) {
-                if (gomokuboard[i][j] == agent)
-                    windowCount["agent"] += 1;
-                else if (gomokuboard[i][j] == opponent)
-                    windowCount["opponent"] += 1;
-                initial += 1;
-                if (i < 8) {
-                    // top half
-                    i += get<0>(update_dir_map[index_dir[k]]);
-                    j += get<1>(update_dir_map[index_dir[k]]);
-                } else {
-                    // bottom
-                    i += get<0>(update_dir_map[index_dir[k]+"_b"]);
-                    j += get<1>(update_dir_map[index_dir[k]+"_b"]);
-                }
-
-                prev_history.push_back(make_tuple(i, j));
-                continue;
-            }
-
-
-            if (gomokuboard[i][j] == agent)
-                windowCount["agent"] += 1;
-            else if (gomokuboard[i][j] == opponent)
-                windowCount["opponent"] += 1;
-
-
-            tuple<int,int> prev_pair= prev_history.front();
-            prev_history.pop_front();
-            if (valid_pos.find(prev_pair) != valid_pos.end()) {
-                int previ = get<0>(prev_pair);
-                int prevj = get<1>(prev_pair);
-                int prevLoc = gomokuboard[previ][prevj];
-                if (prevLoc == agent)
-                    windowCount["agent"] -= 1;
-                else if (prevLoc == opponent)
-                    windowCount["opponent"] -= 1;
-            }
-
-            if (windowCount["opponent"] <= 0) {
-                agentCount[windowCount["agent"]] -= 1;
-                agentCount[windowCount["agent"] + 1] += 1;
-            }
-            if (windowCount["agent"] <= 0)
-                opponentCount[windowCount["opponent"]] -= 1;
-
-            if (i < 8 ){
-                // top half
-                i += get<0>(update_dir_map[index_dir[k]]);
-                j += get<1>(update_dir_map[index_dir[k]]);
-            } else {
-                // bottom
-                i += get<0>(update_dir_map[index_dir[k]+"_b"]);
-                j += get<1>(update_dir_map[index_dir[k]+"_b"]);
-            }
-            prev_history.push_back(make_tuple(i,j));
-        }
-    }
-
-    return {{"agent", agentCount}, {"opponent", opponentCount}};
-}
-*/
 
 void Gomoku::print_board() {
     for (int i = 0 ; i < 17 ; i++) {

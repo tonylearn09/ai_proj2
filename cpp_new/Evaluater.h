@@ -16,8 +16,8 @@ class Evaluator {
          * @param state State to evaluate
          * @return Score from the current players perspective
          */
-        long evaluateState(State state, int depth);
-        long evaluateField(State state, int row, int col, int index);
+        long evaluateState(const State& state, int depth);
+        long evaluateField(const State& state, int row, int col, int index);
     private:
         vector<int> SCORES;
 
@@ -29,7 +29,7 @@ class Evaluator {
          * @param direction A 1D field array representing a direction on the board
          * @return Score for this direction
          */
-        int scoreDirection(vector<shared_ptr<Field> > &direction, int index);
+        int scoreDirection(const vector<shared_ptr<Field> > &direction, int index);
 };
 
 #endif

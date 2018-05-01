@@ -21,25 +21,27 @@ State::State() {
 }
 
 
-long long State::getZobristHash() {
+long long State::getZobristHash() const {
     return zobristHash;
 }
 
-void State::makeMove(Move move) {
+void State::makeMove(const Move& move) {
     moveStack.push(move);
     board[move.row][move.col]->index = currentIndex;
     zobristHash ^= zobristKeys[board[move.row][move.col]->index - 1][move.row][move.col];
-    currentIndex = currentIndex == 1 ? 2 : 1;
+    //currentIndex = currentIndex == 1 ? 2 : 1;
+    currentIndex = 3 - currentIndex;
 }
 
-void State::undoMove(Move move) {
+void State::undoMove(const Move& move) {
     moveStack.pop();
     zobristHash ^= zobristKeys[board[move.row][move.col]->index - 1][move.row][move.col];
     board[move.row][move.col]->index = 0;
-    currentIndex = currentIndex == 1 ? 2 : 1;
+    //currentIndex = currentIndex == 1 ? 2 : 1;
+    currentIndex = 3 - currentIndex;
 }
 
-bool State::hasAdjacent(int r, int c, int distance) {
+bool State::hasAdjacent(int r, int c, int distance) const {
     for(int i = 0; i < 3; i++) {
         for(int j = 1; j <= distance; j++) {
             if (directions[r][c][i][4 + j]->index == 1
@@ -186,15 +188,15 @@ void State::init_zobristkeys() {
 }
 
 
-int State::getMoves() {
+int State::getMoves() const {
     return moveStack.size();
 }
 
-Field State::getField(int r, int c) {
+const Field& State::getField(int r, int c) const {
     return *(board[r][c]);
 }
 
-int State::terminal() {
+int State::terminal() const {
     Move move = moveStack.top();
     int r = move.row;
     int c = move.col;

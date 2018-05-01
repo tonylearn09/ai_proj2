@@ -1,6 +1,6 @@
 # Configuration:
 CC = g++
-CFLAGS = -g -std=c++11
+CFLAGS = -g -O3 -std=c++11
 
 SOURCES = Move.cpp State.cpp Field.cpp Evaluater.cpp ThreatPattern.cpp \
 		  ThreatUtils.cpp Gomoku.cpp NegamaxPlayer.cpp RandomPolicy.cpp play.cpp
