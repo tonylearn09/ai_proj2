@@ -106,7 +106,7 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
 
     // Sort based on move score
     sort(scoredMoves.begin(), scoredMoves.end());
-    for(ScoredMove move : scoredMoves) {
+    for(ScoredMove &move : scoredMoves) {
         moves.push_back(move.move);
     }
 
@@ -223,7 +223,7 @@ void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
     sort(scoredMoves.begin(), scoredMoves.end());
 
     moves.clear();
-    for(ScoredMove move : scoredMoves) moves.push_back(move.move);
+    for(ScoredMove &move : scoredMoves) moves.push_back(move.move);
     //return moves;
 }
 
