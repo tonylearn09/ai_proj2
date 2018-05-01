@@ -116,11 +116,9 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
 
 long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
 
-    /*
     if (time_out()) {
         throw string("time out");
     }
-    */
 
     //totalNodeCount++;
     if (state.terminal() != 0 || depth == 0) {
@@ -141,13 +139,11 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
     if (key_count > 0) {
         count++;
         state.makeMove(hashMoveEntry.move);
-        //try {
+        try {
             value = -negamax(state, depth - 1, -beta, -alpha);
-            /*
         } catch (string e) {
             throw e;
         }
-        */
         state.undoMove(hashMoveEntry.move);
         if (value > best) {
             bestMove = hashMoveEntry.move;
@@ -163,13 +159,11 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
     for (Move &move : moves) {
         count++;
         state.makeMove(move);
-        //try {
+        try {
             value = -negamax(state, depth - 1, -beta, -alpha);
-            /*
         } catch (string e) {
             throw e;
         }
-        */
         state.undoMove(move);
         if(value > best) {
             bestMove = move;
@@ -215,13 +209,11 @@ void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
 
     for(ScoredMove &move : scoredMoves) {
         state.makeMove(move.move);
-        //try {
+        try {
             move.score = -negamax(state, depth - 1, -beta, -alpha);
-            /*
         } catch (string e) {
             throw e;
         }
-        */
         state.undoMove(move.move);
         if(move.score > best) best = move.score;
         if(best > alpha) alpha = best;
@@ -249,14 +241,12 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
     for(int i = startDepth; i <= endDepth; i++) {
         if (time_out())
             break;
-        //try {
+        try {
             //moves = searchMoves(state, moves, i);
             searchMoves(state, moves, i);
-            /*
         } catch (string e) {
             break;
         }
-        */
     }
     return moves[0];
 }
@@ -277,8 +267,8 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
     }
 
     // Run a depth increasing search
-    //Move best = iterativeDeepening(2, 16);
-    Move best = iterativeDeepening(1, 3);
+    Move best = iterativeDeepening(2, 16);
+    //Move best = iterativeDeepening(1, 3);
     return best;
 }
 

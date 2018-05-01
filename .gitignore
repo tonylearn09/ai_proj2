@@ -4,4 +4,5 @@ cpp/player13
 cpp/*.o
 cpp_new/*.o
 cpp_new/play
+cpp_new/player13
 
