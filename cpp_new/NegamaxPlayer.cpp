@@ -116,11 +116,11 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
 
 long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
 
-    /*
+    
     if (time_out()) {
         throw string("time out");
     }
-    */
+    
 
     //totalNodeCount++;
     if (state.terminal() != 0 || depth == 0) {
@@ -141,13 +141,13 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
     if (key_count > 0) {
         count++;
         state.makeMove(hashMoveEntry.move);
-        //try {
+        try {
             value = -negamax(state, depth - 1, -beta, -alpha);
-            /*
+            
         } catch (string e) {
             throw e;
         }
-        */
+        
         state.undoMove(hashMoveEntry.move);
         if (value > best) {
             bestMove = hashMoveEntry.move;
@@ -163,13 +163,13 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
     for (Move &move : moves) {
         count++;
         state.makeMove(move);
-        //try {
+        try {
             value = -negamax(state, depth - 1, -beta, -alpha);
-            /*
+            
         } catch (string e) {
             throw e;
         }
-        */
+        
         state.undoMove(move);
         if(value > best) {
             bestMove = move;
@@ -215,13 +215,13 @@ void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
 
     for(ScoredMove &move : scoredMoves) {
         state.makeMove(move.move);
-        //try {
+        try {
             move.score = -negamax(state, depth - 1, -beta, -alpha);
-            /*
+            
         } catch (string e) {
             throw e;
         }
-        */
+        
         state.undoMove(move.move);
         if(move.score > best) best = move.score;
         if(best > alpha) alpha = best;
@@ -249,14 +249,14 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
     for(int i = startDepth; i <= endDepth; i++) {
         if (time_out())
             break;
-        //try {
+        try {
             //moves = searchMoves(state, moves, i);
             searchMoves(state, moves, i);
-            /*
+            
         } catch (string e) {
             break;
         }
-        */
+        
     }
     return moves[0];
 }
@@ -274,11 +274,72 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
     vector<Move> moves = gameState.getMoves();
     for (Move &move: moves) {
         state.makeMove(move);
-    }
-
+	}
+	/*
+	for(int i = 0 ; i < state.board.size() ; i++) {
+		for(int j = 0 ; j < state.board[i].size(); j++) {
+			cout << (state.board[i][j]) -> index
+		}
+	}*/ 
+	for (int i = 0 ; i < state.board.size() ; i++) {
+    	if (i == 0 || i == 16) {
+    		cout <<  "        " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 1 || i == 15) {
+			cout <<  "       " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 2 || i == 14) {
+			cout <<  "      " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 3 || i == 13) {
+			cout <<  "     " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 4 || i == 12) {
+			cout <<  "    " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 5 || i == 11) {
+			cout <<  "   " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 6 || i == 10) {
+			cout <<  "  " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else if (i == 7 || i == 9) {
+			cout <<  " " ;
+    		for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		} else {
+			for (int j = 0 ; j < state.board[i].size(); j++) {
+    			cout << (state.board[i][j]) -> index << " ";
+			}
+			cout << endl;
+		}
+	}
     // Run a depth increasing search
     //Move best = iterativeDeepening(2, 16);
-    Move best = iterativeDeepening(1, 3);
+    Move best = iterativeDeepening(2, 8);
     return best;
 }
 

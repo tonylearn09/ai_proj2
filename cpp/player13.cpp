@@ -22,7 +22,7 @@ int main(){
 	int onetwo = 0; 	//先手or後手 
 	
 	map<int, float> weights;
-    ifstream weight_file("weight.txt");
+    ifstream weight_file("best.txt");
     if (weight_file.is_open()) {
         for (int key = 0; key < 6; key++) {
             weight_file >> weights[key];
@@ -118,6 +118,9 @@ int main(){
 			newGame.clear(1);
 			//newGame.print_board();
 			//system("pause");
+			for(int i = 0 ; i < 127 ; i++) {
+				pre_data[i] = 0;
+			}
 			pre_step = 0;	
 		}
 		fclose(fstate);
