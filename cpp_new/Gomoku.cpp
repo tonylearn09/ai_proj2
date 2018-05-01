@@ -124,14 +124,6 @@ bool Gomoku::updateBoard(Move move) {
     }
 
     moves.push_back(move);
-    cout << endl;
-
-    cout << "Vector Elemet: ";
-    for (int i = 0; i < moves.size(); i++) {
-    	cout << reverse_index_map[ moves[i] ] << " ";
-			
-	}
-	cout << endl;
     totalSteps[currentIndex - 1] += 1;
     //cout << totalSteps[0] << " " << totalSteps[1] << endl;
     //lastMove = pos_index;
@@ -250,7 +242,6 @@ void Gomoku::clear() {
 
     prevWinningCount.clear();
     */
-    system("pause");
     cout << "Finish clearing up board for restart" << endl ;
 }
 
