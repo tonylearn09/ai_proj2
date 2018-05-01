@@ -2,4 +2,6 @@ cpp/gomoku_ai
 cpp/train_agent
 cpp/player13
 cpp/*.o
+cpp_new/*.o
+cpp_new/play
 
