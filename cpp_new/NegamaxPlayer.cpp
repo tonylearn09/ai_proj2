@@ -15,7 +15,7 @@ NegamaxPlayer::NegamaxPlayer() {
     max_time = 4.0;
 }
 
-vector<Move> NegamaxPlayer::getSortedMoves(State state) {
+vector<Move> NegamaxPlayer::getSortedMoves(State &state) {
     // Board is empty, return a move in the middle of the board
     if(state.getMoves() == 0) {
         vector<Move> moves;
@@ -35,7 +35,7 @@ vector<Move> NegamaxPlayer::getSortedMoves(State state) {
     // Check for threats first and respond to them if they exist
     for(int i = 0; i < state.board.size(); i++) {
         for(int j = 0; j < state.board[i].size(); j++) {
-            if(state.board[i][j].index == opponentIndex) {
+            if((state.board[i][j])->index == opponentIndex) {
                 vector<Move> four_result = reducer.getFours(state,
                         state.board[i][j], opponentIndex);
                 opponentFours.insert(four_result.begin(), four_result.end());
@@ -43,7 +43,7 @@ vector<Move> NegamaxPlayer::getSortedMoves(State state) {
                         state.board[i][j], opponentIndex);
                 opponentThrees.insert(three_result.begin(), three_result.end());
             }
-            else if(state.board[i][j].index == playerIndex) {
+            else if((state.board[i][j])->index == playerIndex) {
                 vector<Move> four_result = reducer.getFours(state,
                         state.board[i][j], playerIndex);
                 fours.insert(four_result.begin(), four_result.end());
@@ -81,23 +81,25 @@ vector<Move> NegamaxPlayer::getSortedMoves(State state) {
                     (i == entry.move.row && j == entry.move.col)) {
                 continue;
             }
-            if(state.board[i][j].index == 0) {
+            if((state.board[i][j])->index == 0) {
                 if(state.hasAdjacent(i, j, 2)) {
                     int score = evaluator.evaluateField(state, i, j,
                             state.currentIndex);
                     scoredMoves.push_back(ScoredMove(Move(i, j), score));
-                    cout << "( " << i << ", " << j << ")" << "is good" <<endl;
+                    //cout << "( " << i << ", " << j << ")" << "is good" <<endl;
                 }
             }
-            if (state.board[i][j].index == 1) {
+            /*
+            if ((state.board[i][j])->index == 1) {
                 cout << "( " << i << ", " << j << ")" << "is 1" <<endl;
                 for (int m = 0; m < 3; m++) {
                     for (int n = 0; n < 9; n++) {
-                        cout << "(" << state.directions[i][j][m][n].row << ", " << state.directions[i][j][m][n].col << ")" << 
-                            ": " << state.directions[i][j][m][n].index << endl;
+                        cout << "(" << (state.directions[i][j][m][n])->row << ", " << (state.directions[i][j][m][n])->col << ")" << 
+                            ": " << (state.directions[i][j][m][n])->index << endl;
                     }
                 }
             }
+            */
         }
     }
 
@@ -108,15 +110,18 @@ vector<Move> NegamaxPlayer::getSortedMoves(State state) {
     for(ScoredMove move : scoredMoves) {
         moves.push_back(move.move);
     }
+
     return moves;
 
 }
 
 long NegamaxPlayer::negamax(State state, int depth, long alpha, long beta) {
 
+    /*
     if (time_out()) {
         throw string("time out");
     }
+    */
 
     totalNodeCount++;
     if (state.terminal() != 0 || depth == 0) {
@@ -137,11 +142,13 @@ long NegamaxPlayer::negamax(State state, int depth, long alpha, long beta) {
     if (key_count > 0) {
         count++;
         state.makeMove(hashMoveEntry.move);
-        try {
+        //try {
             value = -negamax(state, depth - 1, -beta, -alpha);
+            /*
         } catch (string e) {
             throw e;
         }
+        */
         state.undoMove(hashMoveEntry.move);
         if (value > best) {
             bestMove = hashMoveEntry.move;
@@ -157,11 +164,13 @@ long NegamaxPlayer::negamax(State state, int depth, long alpha, long beta) {
     for (Move &move : moves) {
         count++;
         state.makeMove(move);
-        try {
+        //try {
             value = -negamax(state, depth - 1, -beta, -alpha);
+            /*
         } catch (string e) {
             throw e;
         }
+        */
         state.undoMove(move);
         if(value > best) {
             bestMove = move;
@@ -183,6 +192,7 @@ void NegamaxPlayer::putMoveEntry(long long key, Move move, int depth) {
     int key_count = moveTable.count(key);
     MoveEntry moveEntry = moveTable.get(key);
 
+
     if (key_count == 0) {
         // Not found
         moveTable.insert(key, MoveEntry(move, depth));
@@ -193,7 +203,7 @@ void NegamaxPlayer::putMoveEntry(long long key, Move move, int depth) {
 }
 
 
-vector<Move> NegamaxPlayer::searchMoves(State state, vector<Move> moves, int depth) {
+vector<Move> NegamaxPlayer::searchMoves(State &state, vector<Move> moves, int depth) {
     vector<ScoredMove> scoredMoves;
     for(Move &move : moves) {
         scoredMoves.push_back(ScoredMove(move, LONG_MIN));
@@ -205,11 +215,13 @@ vector<Move> NegamaxPlayer::searchMoves(State state, vector<Move> moves, int dep
 
     for(ScoredMove &move : scoredMoves) {
         state.makeMove(move.move);
-        try {
+        //try {
             move.score = -negamax(state, depth - 1, -beta, -alpha);
+            /*
         } catch (string e) {
             throw e;
         }
+        */
         state.undoMove(move.move);
         if(move.score > best) best = move.score;
         if(best > alpha) alpha = best;
@@ -235,11 +247,13 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
     */
     if(moves.size() == 1) return moves[0];
     for(int i = startDepth; i <= endDepth; i++) {
-        try {
+        //try {
             moves = searchMoves(state, moves, i);
+            /*
         } catch (string e) {
             break;
         }
+        */
     }
     return moves[0];
 }

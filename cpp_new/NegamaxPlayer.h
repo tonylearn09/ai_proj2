@@ -26,7 +26,7 @@ class NegamaxPlayer {
          * @param state State to get moves for
          * @return A list of moves, sorted and pruned
          */
-        vector<Move> getSortedMoves(State state);
+        vector<Move> getSortedMoves(State &state);
          /**
           * Run the negamax algorithm for a node in the game tree.
           * @param state Node to search
@@ -53,7 +53,7 @@ class NegamaxPlayer {
          * @param depth Depth to search to
          * @return Original move list sorted by best score first
          */
-        vector<Move> searchMoves(State state, vector<Move> moves, int depth);
+        vector<Move> searchMoves(State &state, vector<Move> moves, int depth);
 
         /**
          * Run negamax for an increasing depth, sorting the moves after every
@@ -71,7 +71,7 @@ class NegamaxPlayer {
 
         class MoveEntry {
             public:
-                MoveEntry(): depth(-1) { }
+                MoveEntry(): depth(-1) {}
                 MoveEntry(Move move_, int depth_): move(move_), depth(depth_) {}
                 Move move;
                 int depth;

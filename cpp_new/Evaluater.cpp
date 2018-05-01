@@ -5,16 +5,16 @@ Evaluator::Evaluator() {
 }
 
 
-int Evaluator::scoreDirection(vector<Field> direction, int index) {
+int Evaluator::scoreDirection(vector<shared_ptr<Field> > &direction, int index) {
     int score = 0;
     // Pass a window of 5 across the field array
     for(int i = 0; (i + 4) < direction.size(); i++) {
         int empty = 0;
         int stones = 0;
         for(int j = 0; j <= 4; j++) {
-            if(direction[i + j].index == 0) {
+            if(direction[i + j]->index == 0) {
                 empty++;
-            } else if(direction[i + j].index == index) {
+            } else if(direction[i + j]->index == index) {
                 stones++;
             } else {
                 // Opponent stone in this window, can't form a five
@@ -47,9 +47,9 @@ long Evaluator::evaluateState(State state, int depth) {
     long score = 0;
     for(int i = 0; i < state.board.size(); i++) {
         for(int j = 0; j < state.board[i].size(); j++) {
-            if(state.board[i][j].index == opponentIndex) {
+            if((state.board[i][j])->index == opponentIndex) {
                 score -= evaluateField(state, i, j, opponentIndex);
-            } else if(state.board[i][j].index == playerIndex) {
+            } else if((state.board[i][j])->index == playerIndex) {
                 score += evaluateField(state, i, j, playerIndex);
             }
         }

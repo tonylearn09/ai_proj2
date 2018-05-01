@@ -109,10 +109,7 @@ vector<Move> Gomoku::getMoves() {
 }
 
 Move Gomoku::getLastMove() {
-    if (moves.size() > 0)
-        return moves.back();
-    else
-        return Move();
+    return moves.back();
 }
 
 tuple<int, int, int> Gomoku::currentGame() {

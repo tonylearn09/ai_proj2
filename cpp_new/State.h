@@ -96,12 +96,12 @@ class State {
         bool is_valid_cell(int row, int col);
 
         // data
-        typedef std::vector<Field> FieldV1;
+        typedef std::vector<std::shared_ptr<Field> > FieldV1;
         typedef std::vector<FieldV1> FieldV2;
         typedef std::vector<FieldV2> FieldV3;
         typedef std::vector<FieldV3> FieldV4;
 
-        vector<vector<Field> > board;
+        vector<vector<shared_ptr<Field> > > board;
         //vector<vector<vector<vector<Field> > > > directions;
         FieldV4 directions;
 

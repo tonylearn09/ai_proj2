@@ -1,6 +1,6 @@
 # Configuration:
 CC = g++
-CFLAGS = -g -O2 -std=c++11
+CFLAGS = -g -std=c++11
 
 SOURCES = Move.cpp State.cpp Field.cpp Evaluater.cpp ThreatPattern.cpp \
 		  ThreatUtils.cpp Gomoku.cpp NegamaxPlayer.cpp RandomPolicy.cpp play.cpp
@@ -15,23 +15,23 @@ $(TARGET) : $(OBJECTS)
 
 Move.o : Move.h Move.cpp
 	$(CC) $(CFLAGS) -c Move.cpp
-State.o : State.h State.cpp
-	$(CC) $(CFLAGS) -c State.cpp
 Field.o : Field.h Field.cpp
 	$(CC) $(CFLAGS) -c Field.cpp
-Evaluater.o : Evaluater.h Evaluater.cpp
+State.o : State.h Move.h Field.h State.cpp
+	$(CC) $(CFLAGS) -c State.cpp
+Evaluater.o : Evaluater.h Field.h State.h Evaluater.cpp
 	$(CC) $(CFLAGS) -c Evaluater.cpp
 ThreatPattern.o : ThreatPattern.h ThreatPattern.cpp
 	$(CC) $(CFLAGS) -c ThreatPattern.cpp
-ThreatUtils.o : ThreatUtils.h ThreatUtils.cpp
+ThreatUtils.o : ThreatUtils.h ThreatPattern.h Move.h State.h Field.h ThreatUtils.cpp
 	$(CC) $(CFLAGS) -c ThreatUtils.cpp
-Gomoku.o : Gomoku.h Gomoku.cpp
+Gomoku.o : Gomoku.h Move.h Gomoku.cpp
 	$(CC) $(CFLAGS) -c Gomoku.cpp
-NegamaxPlayer.o : NegamaxPlayer.h Cache.h NegamaxPlayer.cpp
+NegamaxPlayer.o : NegamaxPlayer.h Cache.h Move.h State.h Evaluater.h Gomoku.h ThreatUtils.h NegamaxPlayer.cpp
 	$(CC) $(CFLAGS) -c NegamaxPlayer.cpp
 RandomPolicy.o : RandomPolicy.h RandomPolicy.cpp
 	$(CC) $(CFLAGS) -c RandomPolicy.cpp
-play.o : play.cpp
+play.o : Gomoku.h RandomPolicy.h NegamaxPlayer.h Move.h play.cpp
 	$(CC) $(CFLAGS) -c play.cpp
 
 

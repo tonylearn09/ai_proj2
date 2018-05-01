@@ -2,6 +2,7 @@
 #include <string>
 #include <random>
 #include <iostream>
+#include <cstdlib>
 #include "State.h"
 
 using namespace std;
@@ -16,7 +17,7 @@ State::State() {
     zobristHash = 0;
     init_zobristkeys();
 
-    cout << "Finish init state" << endl;
+    //cout << "Finish init state" << endl;
 }
 
 
@@ -26,25 +27,25 @@ long long State::getZobristHash() {
 
 void State::makeMove(Move move) {
     moveStack.push(move);
-    board[move.row][move.col].index = currentIndex;
-    zobristHash ^= zobristKeys[board[move.row][move.col].index - 1][move.row][move.col];
+    board[move.row][move.col]->index = currentIndex;
+    zobristHash ^= zobristKeys[board[move.row][move.col]->index - 1][move.row][move.col];
     currentIndex = currentIndex == 1 ? 2 : 1;
 }
 
 void State::undoMove(Move move) {
     moveStack.pop();
-    zobristHash ^= zobristKeys[board[move.row][move.col].index - 1][move.row][move.col];
-    board[move.row][move.col].index = 0;
+    zobristHash ^= zobristKeys[board[move.row][move.col]->index - 1][move.row][move.col];
+    board[move.row][move.col]->index = 0;
     currentIndex = currentIndex == 1 ? 2 : 1;
 }
 
 bool State::hasAdjacent(int r, int c, int distance) {
     for(int i = 0; i < 3; i++) {
         for(int j = 1; j <= distance; j++) {
-            if (directions[r][c][i][4 + j].index == 1
-                    || directions[r][c][i][4 - j].index == 1
-                    || directions[r][c][i][4 + j].index == 2
-                    || directions[r][c][i][4 - j].index == 2) {
+            if (directions[r][c][i][4 + j]->index == 1
+                    || directions[r][c][i][4 - j]->index == 1
+                    || directions[r][c][i][4 + j]->index == 2
+                    || directions[r][c][i][4 - j]->index == 2) {
                 return true;
             }
         }
@@ -53,10 +54,9 @@ bool State::hasAdjacent(int r, int c, int distance) {
 }
 
 void State::generateDirections() {
-    //directions.resize(board.size());
+    directions.resize(board.size());
     for(int r = 0; r < board.size(); r++) {
-        directions.push_back(FieldV3(board[r].size(), FieldV2(3, FieldV1(9))));
-        //directions[r].resize(board[r].size(), FieldV2(3, FieldV1(9)));
+        directions[r].resize(board[r].size(), FieldV2(3, FieldV1(9)));
         for(int c = 0; c < board[r].size(); c++) {
             directions[r][c][0][4] = board[r][c];
             directions[r][c][1][4] = board[r][c];
@@ -75,7 +75,7 @@ void State::generateDirections() {
                 if (is_valid_cell(temp_r, temp_c)) {
                     directions[r][c][i][4 - count] = board[temp_r][temp_c];
                 } else {
-                    directions[r][c][i][4 - count] = Field();
+                    directions[r][c][i][4 - count] = make_shared<Field>();
                 }
 
                 if (count == 4) {
@@ -108,7 +108,7 @@ void State::generateDirections() {
                 if (is_valid_cell(temp_r, temp_c)) {
                     directions[r][c][i][4 + count] = board[temp_r][temp_c];
                 } else {
-                    directions[r][c][i][4 + count] = Field();
+                    directions[r][c][i][4 + count] = make_shared<Field>();
                 }
 
                 if (count == 4) {
@@ -133,15 +133,28 @@ void State::generateDirections() {
 
         }
     }
+
+    /*
+    for (int i = 0; i < board.size(); i++) {
+        for (int j = 0; j < board[i].size(); j++) {
+            for (int k = 0; k < 3; k++) {
+                for (int m = 0; m < 9; m++) {
+                    cout << i << " " << j << " " << k << " " << m << endl;
+                    cout << "dir["<< i << "][" << j << "][" << k << "][" << m << "] = " << directions[i][j][k][m]->index << endl;
+                }
+            }
+        }
+    }
+    */
 }
 
 
 
 void State::init_board() {
     for (int i = 0, limit = 9; i < 17; i++) {
-        vector<Field> row;
+        vector<shared_ptr<Field> > row;
         for (int j = 0; j < limit; j++) {
-            row.push_back(Field(i, j));
+            row.push_back(make_shared<Field>(i, j));
         }
         board.push_back(row);
 
@@ -178,7 +191,7 @@ int State::getMoves() {
 }
 
 Field State::getField(int r, int c) {
-    return board[r][c];
+    return *(board[r][c]);
 }
 
 int State::terminal() {
@@ -189,10 +202,11 @@ int State::terminal() {
 
     for(int i = 0; i < 3; i++) {
         for(int j = 0; j < 6; j++) {
-            if(directions[r][c][i][j].index == lastIndex) {
+            //cout << i << " " << j << endl;
+            if(directions[r][c][i][j]->index == lastIndex) {
                 int count = 0;
                 for(int k = 1; k < 5; k++) {
-                    if(directions[r][c][i][j+k].index == lastIndex) {
+                    if(directions[r][c][i][j+k]->index == lastIndex) {
                         count++;
                     } else {
                         break;

@@ -51,6 +51,7 @@ int main(){
             //time_to_move[nextPlayer - 1].append(time.time() - start)
             //print "player %d places on (%d, %d)"%(nextPlayer, action[0], action[1])
             newGame.print_board();
+            cout << endl;
             //inp = input('Enter')
             //cout << action << endl;
             //cout << newGame.isEnd() << endl;

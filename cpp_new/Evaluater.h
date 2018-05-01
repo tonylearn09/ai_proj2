@@ -2,6 +2,7 @@
 #define EVALUATER_H
 
 #include <vector>
+#include <memory>
 #include "Field.h"
 #include "State.h"
 
@@ -28,7 +29,7 @@ class Evaluator {
          * @param direction A 1D field array representing a direction on the board
          * @return Score for this direction
          */
-        int scoreDirection(vector<Field> direction, int index);
+        int scoreDirection(vector<shared_ptr<Field> > &direction, int index);
 };
 
 #endif
