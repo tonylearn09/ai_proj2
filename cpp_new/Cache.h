@@ -5,6 +5,7 @@
 #include <deque>
 #include <utility>
 #include <ctime>
+#include <iostream>
 
 template <typename KeyType, typename ValueType> class Cache {
     public:
@@ -51,9 +52,10 @@ bool Cache<KeyType, ValueType>::insert(const KeyType& key, const ValueType& valu
     std::pair<typename std::unordered_map<KeyType, ValueType>::iterator, bool> result =
         cache_map.insert(std::make_pair(key, value));
 
-    if (result.second) {
-        track_deque.push_back(std::make_pair(result.first, time(NULL)));
+    if (!result.second) {
+        (result.first)->second = value;
     }
+    track_deque.push_back(std::make_pair(result.first, time(NULL)));
 
     return result.second;
 }

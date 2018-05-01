@@ -10,9 +10,15 @@ Move::Move(int row_, int col_) {
     col = col_;
 }
 
+
 Move::Move(std::pair<int, int> index) {
     row = index.first;
     col = index.second;
+}
+
+Move::Move(const Move& rhs) {
+    row = rhs.row;
+    col = rhs.col;
 }
 
 

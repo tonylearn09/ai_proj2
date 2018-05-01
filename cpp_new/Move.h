@@ -19,6 +19,7 @@ class Move {
         Move();
         Move(int row_, int col_);
         Move(std::pair<int, int>);
+        Move(const Move&);
 
         bool operator==(const Move& rhs) const;
 

@@ -247,6 +247,8 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
     */
     if(moves.size() == 1) return moves[0];
     for(int i = startDepth; i <= endDepth; i++) {
+        if (time_out())
+            break;
         //try {
             moves = searchMoves(state, moves, i);
             /*
@@ -274,7 +276,8 @@ Move NegamaxPlayer::getMove(Gomoku gameState) {
     }
 
     // Run a depth increasing search
-    Move best = iterativeDeepening(2, 16);
+    //Move best = iterativeDeepening(2, 16);
+    Move best = iterativeDeepening(1, 2);
     return best;
 }
 
