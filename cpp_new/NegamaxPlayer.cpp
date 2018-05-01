@@ -271,62 +271,6 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
 			cout << (state.board[i][j]) -> index
 		}
 	}*/ 
-	for (int i = 0 ; i < state.board.size() ; i++) {
-    	if (i == 0 || i == 16) {
-    		cout <<  "        " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 1 || i == 15) {
-			cout <<  "       " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 2 || i == 14) {
-			cout <<  "      " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 3 || i == 13) {
-			cout <<  "     " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 4 || i == 12) {
-			cout <<  "    " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 5 || i == 11) {
-			cout <<  "   " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 6 || i == 10) {
-			cout <<  "  " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else if (i == 7 || i == 9) {
-			cout <<  " " ;
-    		for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		} else {
-			for (int j = 0 ; j < state.board[i].size(); j++) {
-    			cout << (state.board[i][j]) -> index << " ";
-			}
-			cout << endl;
-		}
-	}
     // Run a depth increasing search
     Move best = iterativeDeepening(2, 16);
     //Move best = iterativeDeepening(1, 3);
