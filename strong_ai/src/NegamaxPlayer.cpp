@@ -264,7 +264,7 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
         state.makeMove(move);
     }
     // print current state
-    state.printState();
+    //state.printState();
     // Run a depth increasing search
     Move best = iterativeDeepening(2, 16);
     //Move best = iterativeDeepening(1, 3);

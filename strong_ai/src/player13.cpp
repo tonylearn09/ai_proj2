@@ -111,7 +111,7 @@ int main() {
             //newGame.print_board();
             //system("pause");
             pre_step = 0;	
-            for (int i =0; i < 127; i++) {
+            for (int i =0; i < 217; i++) {
                 pre_data[i] = 0;
             }
         }

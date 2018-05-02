@@ -127,7 +127,7 @@ bool Gomoku::updateBoard(Move move) {
 
     moves.push_back(move);
     // print current move
-    print_move();
+    //print_move();
 
     totalSteps[currentIndex - 1] += 1;
     //cout << totalSteps[0] << " " << totalSteps[1] << endl;
