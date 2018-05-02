@@ -1,8 +1,8 @@
-cpp/gomoku_ai
-cpp/train_agent
-cpp/player13
-cpp/*.o
-cpp_new/*.o
-cpp_new/play
-cpp_new/player13
+weak_ai/cpp/gomoku_ai
+weak_ai/cpp/train_agent
+weak_ai/cpp/player13
+weak_ai/cpp/*.o
+strong_ai/*.o
+strong_ai/play
+straon_ai/player13
 
