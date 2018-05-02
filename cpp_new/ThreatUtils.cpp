@@ -1,5 +1,7 @@
 #include "ThreatUtils.h"
 
+using namespace std;
+
 
 ThreatUtils::ThreatUtils() {
     THREES.push_back(ThreatPattern({0, 1, 1, 1, 0, 0}, {0, 4, 5}));

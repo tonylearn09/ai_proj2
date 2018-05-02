@@ -10,23 +10,22 @@
 #include <stack>
 #include <utility>
 #include "Move.h"
-using namespace std;
 
 class Gomoku {
     public:
         //pair<int, int> lastMove;
-        vector<int> totalSteps;
+        std::vector<int> totalSteps;
         //vector<vector<int> > winningCount;
         //vector<vector<vector<int> > >  prevWinningCount;
 
-        unordered_map<int, Move> index_map;
-        unordered_map<Move, int> reverse_index_map;
-        map<string, Move> is_end_check_dir_map;
+        std::unordered_map<int, Move> index_map;
+        std::unordered_map<Move, int> reverse_index_map;
+        std::map<std::string, Move> is_end_check_dir_map;
         //map<string, pair<int, int> > update_dir_map;
 
         Gomoku();
 
-        tuple<int, int, int> currentGame();
+        std::tuple<int, int, int> currentGame();
         bool updateBoard(int pos);
         bool updateBoard(Move move);
         void revert();
@@ -35,7 +34,7 @@ class Gomoku {
         int boardState(int pos_x, int pos_y);
         void print_board();
 
-        const vector<Move>& getMoves() const ;
+        const std::vector<Move>& getMoves() const ;
         Move getLastMove();
         int getCurrentIndex();
     private:
@@ -45,9 +44,9 @@ class Gomoku {
         void init_reverse_index_map();
 
         // data
-        vector<Move> moves;
+        std::vector<Move> moves;
         int currentIndex;
-        vector<vector<int> > gomokuboard;
+        std::vector<std::vector<int> > gomokuboard;
 
 };
 

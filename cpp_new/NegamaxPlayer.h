@@ -12,7 +12,6 @@
 #include "ThreatUtils.h"
 #include "Cache.h"
 
-using namespace std;
 
 class NegamaxPlayer {
     public:
@@ -26,7 +25,7 @@ class NegamaxPlayer {
          * @param state State to get moves for
          * @return A list of moves, sorted and pruned
          */
-        vector<Move> getSortedMoves(const State& state);
+        std::vector<Move> getSortedMoves(const State& state);
          /**
           * Run the negamax algorithm for a node in the game tree.
           * @param state Node to search
@@ -54,7 +53,7 @@ class NegamaxPlayer {
          * @return Original move list sorted by best score first
          */
         //vector<Move> searchMoves(State &state, vector<Move> moves, int depth);
-        void searchMoves(State &state, vector<Move>& moves, int depth);
+        void searchMoves(State &state, std::vector<Move>& moves, int depth);
 
         /**
          * Run negamax for an increasing depth, sorting the moves after every

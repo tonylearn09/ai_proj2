@@ -3,7 +3,6 @@
 
 #include "Gomoku.h"
 
-using namespace std;
 
 class RandomPolicy {
     public:

@@ -1,6 +1,6 @@
 #include "ThreatPattern.h"
 
-
+using namespace std;
 
 ThreatPattern::ThreatPattern(const vector<int>& pattern_, const vector<int>& patternSquares_) {
     pattern.push_back(pattern_);

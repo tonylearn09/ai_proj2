@@ -8,7 +8,6 @@
 #include "Move.h"
 #include "Field.h"
 
-using namespace std;
 
 /**
  * Internal game state representation for the AI.
@@ -101,7 +100,8 @@ class State {
         typedef std::vector<FieldV2> FieldV3;
         typedef std::vector<FieldV3> FieldV4;
 
-        vector<vector<shared_ptr<Field> > > board;
+        //std::vector<std::vector<std::shared_ptr<Field> > > board;
+        FieldV2 board;
         //vector<vector<vector<vector<Field> > > > directions;
         FieldV4 directions;
 
@@ -110,11 +110,11 @@ class State {
 
          // Zobrist hashing, for using the state in a hash data structure
         long long zobristHash;
-        vector<vector<vector<long long> > >  zobristKeys;
+        std::vector<std::vector<std::vector<long long> > >  zobristKeys;
 
-        stack<Move> moveStack;
+        std::stack<Move> moveStack;
 
-        map<string, pair<int, int> > neighbor_map;
+        std::map<std::string, std::pair<int, int> > neighbor_map;
 
 
 };
