@@ -53,7 +53,7 @@ int main() {
                 if (step == 1) {
                     Move action = negamaxPlayer.getMove(newGame);
                     move = newGame.reverse_index_map[action];
-                    printf("initial\n");
+                    //printf("initial\n");
                     pre_data[move] = 1;
                     data[move] = 1;
                     //newGame.print_board();
