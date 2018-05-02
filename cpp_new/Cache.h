@@ -2,7 +2,7 @@
 #define CACHE_H
 
 #include <unordered_map>
-#include <deque>
+#include <list>
 #include <utility>
 #include <ctime>
 #include <iostream>
@@ -10,74 +10,81 @@
 template <typename KeyType, typename ValueType> class Cache {
     public:
         Cache();
-        Cache(long max_size);
-        bool insert(const KeyType& key, const ValueType& value);
-        int count(const KeyType& key);
-        ValueType& get(const KeyType& key);
-        void removeEldest();
-        void setMaxSize(long max_size);
+        Cache(size_t max_size);
+        void setMaxSize(size_t max_size);
 
+        void insert(const KeyType& key, const ValueType& value);
+        bool exist(const KeyType& key);
+        ValueType& get(const KeyType& key);
         void clear();
 
+
     private:
-        std::unordered_map<KeyType, ValueType> cache_map;
-        std::deque<std::pair<typename std::unordered_map<KeyType, ValueType>::iterator, time_t> > track_deque;
-        long max_size_;
+        void removeLeastUse();
+
+        std::list<std::pair<KeyType, ValueType> > item_list;
+        std::unordered_map<KeyType, decltype(item_list.begin())> item_map;
+        size_t cache_size_;
 
 };
 
 template<typename KeyType, typename ValueType>
-Cache<KeyType, ValueType>::Cache() { 
-    // at least 1
-    max_size_ = 1;
+Cache<KeyType, ValueType>::Cache(): cache_size_(100) { 
+    ;
 }
 
 template<typename KeyType, typename ValueType>
-Cache<KeyType, ValueType>::Cache(long max_size) { 
-    max_size_ = max_size;
+Cache<KeyType, ValueType>::Cache(size_t cache_size): cache_size_(cache_size) { 
+    ;
 }
 
 template<typename KeyType, typename ValueType>
-void Cache<KeyType, ValueType>::setMaxSize(long max_size) {
-    max_size_ = max_size;
+void Cache<KeyType, ValueType>::setMaxSize(size_t cache_size) {
+    cache_size_ = cache_size;
 }
 
 template<typename KeyType, typename ValueType>
-bool Cache<KeyType, ValueType>::insert(const KeyType& key, const ValueType& value) {
-    if (track_deque.size() > max_size_) {
-        removeEldest();
+void Cache<KeyType, ValueType>::insert(const KeyType& key, const ValueType& value) {
+    auto it = item_map.find(key);
+    // replace original value if key exists
+    if (it != item_map.end()) {
+        item_list.erase(it->second);
+        item_map.erase(it);
     }
-    std::pair<typename std::unordered_map<KeyType, ValueType>::iterator, bool> result =
-        cache_map.insert(std::make_pair(key, value));
 
-    if (!result.second) {
-        (result.first)->second = value;
-    }
-    track_deque.push_back(std::make_pair(result.first, time(NULL)));
+    item_list.push_front(make_pair(key, value));
+    item_map.insert(make_pair(key, item_list.begin()));
+    removeLeastUse();
 
-    return result.second;
 }
 
 template<typename KeyType, typename ValueType>
-void Cache<KeyType, ValueType>::removeEldest() {
-    cache_map.erase(track_deque.front().first);
-    track_deque.pop_front();
+void Cache<KeyType, ValueType>::removeLeastUse() {
+    while (item_map.size() > cache_size_) {
+        auto last_it = item_list.end();
+        last_it--;
+        item_map.erase(last_it->first);
+        item_list.pop_back();
+    }
 }
 
 template<typename KeyType, typename ValueType>
 ValueType& Cache<KeyType, ValueType>::get(const KeyType& key) {
-    return cache_map[key];
+    // assert(exist(key));
+    auto it = item_map.find(key);
+    item_list.splice(item_list.begin(), item_list, it->second);
+    return it->second->second;
 }
 
 template<typename KeyType, typename ValueType>
-int Cache<KeyType, ValueType>::count(const KeyType& key) {
-    return cache_map.count(key);
+bool Cache<KeyType, ValueType>::exist(const KeyType& key) {
+    return (item_map.count(key) > 0);
 }
 
 template<typename KeyType, typename ValueType>
 void Cache<KeyType, ValueType>::clear() {
-    cache_map.clear();
-    track_deque.clear();
+    item_map.clear();
+    item_list.clear();
 }
 
 #endif

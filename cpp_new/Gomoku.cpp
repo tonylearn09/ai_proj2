@@ -163,7 +163,7 @@ int Gomoku::isEnd() {
     // 0 - break even
     // 1 - player 1 wins
     // 2 - player 2 wins
-	//cout << totalSteps[0]+totalSteps[1] << endl;
+    //cout << totalSteps[0]+totalSteps[1] << endl;
     if (moves.size() < 5)
         return -1;
 
@@ -216,7 +216,7 @@ int Gomoku::isEnd() {
     }
 
     //if (debug)
-        //cout << count << endl;
+    //cout << count << endl;
     if ((count1["W"] + count2["E"] >= 6) ||
             (count1["NW"] + count2["SE"] >= 6) ||
             (count1["NE"] + count2["SW"] >= 6)) 
@@ -236,74 +236,74 @@ void Gomoku::clear() {
 
     // [[agent count], [opponent count]]
     /*
-    winningCount[0] = vector<int>(6);
-    winningCount[1] = vector<int>(6);
-    winningCount[0][0] = winningCount[1][0] = 217;
+       winningCount[0] = vector<int>(6);
+       winningCount[1] = vector<int>(6);
+       winningCount[0][0] = winningCount[1][0] = 217;
 
-    prevWinningCount.clear();
-    */
-    cout << "Finish clearing up board for restart" << endl ;
+       prevWinningCount.clear();
+       */
+    //cout << "Finish clearing up board for restart" << endl ;
 }
 
 
 void Gomoku::print_board() {
     for (int i = 0 ; i < 17 ; i++) {
-    	if (i == 0 || i == 16) {
-    		cout <<  "        " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 1 || i == 15) {
-			cout <<  "       " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 2 || i == 14) {
-			cout <<  "      " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 3 || i == 13) {
-			cout <<  "     " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 4 || i == 12) {
-			cout <<  "    " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 5 || i == 11) {
-			cout <<  "   " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 6 || i == 10) {
-			cout <<  "  " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else if (i == 7 || i == 9) {
-			cout <<  " " ;
-    		for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		} else {
-			for (int j = 0 ; j < gomokuboard[i].size(); j++) {
-    			cout << gomokuboard[i][j] << " ";
-			}
-			cout << endl;
-		}
-	}
-        
+        if (i == 0 || i == 16) {
+            cout <<  "        " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 1 || i == 15) {
+            cout <<  "       " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 2 || i == 14) {
+            cout <<  "      " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 3 || i == 13) {
+            cout <<  "     " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 4 || i == 12) {
+            cout <<  "    " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 5 || i == 11) {
+            cout <<  "   " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 6 || i == 10) {
+            cout <<  "  " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else if (i == 7 || i == 9) {
+            cout <<  " " ;
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        } else {
+            for (int j = 0 ; j < gomokuboard[i].size(); j++) {
+                cout << gomokuboard[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
 }
 
 int Gomoku::boardState(int pos_x, int pos_y) { 
@@ -326,12 +326,12 @@ void Gomoku::init_dir_map() {
         {"NE_b", Move(-1, 1)}, {"SW_b", Move(1, -1)}
     };
     /*
-    update_dir_map = {
-        {"row", make_tuple(0, 1)}, {"diag", make_tuple(1, 1)}, 
-        {"rdiag", make_tuple(1, 0)}, {"row_b", make_tuple(0, 1)}, 
-        {"diag_b", make_tuple(1, 0)}, {"rdiag_b", make_tuple(1, -1)}
-    };
-    */
+       update_dir_map = {
+       {"row", make_tuple(0, 1)}, {"diag", make_tuple(1, 1)}, 
+       {"rdiag", make_tuple(1, 0)}, {"row_b", make_tuple(0, 1)}, 
+       {"diag_b", make_tuple(1, 0)}, {"rdiag_b", make_tuple(1, -1)}
+       };
+       */
 }
 
 void Gomoku::init_reverse_index_map() {
@@ -339,36 +339,36 @@ void Gomoku::init_reverse_index_map() {
         reverse_index_map[i->second] = i->first;
 
     /*
-    for (auto &x: reverse_index_map) {
-        if (x.first == index_map[x.second]) {
-            cout << "Great" << endl;
-        } else {
-            cerr << "Error" << endl;
-        }
-    }
-    */
+       for (auto &x: reverse_index_map) {
+       if (x.first == index_map[x.second]) {
+       cout << "Great" << endl;
+       } else {
+       cerr << "Error" << endl;
+       }
+       }
+       */
 }
 
 /*
-int main(){
-	
-	Gomoku g(1);
-	g.updateBoard(79);
-	g.updateBoard(84);
-	g.updateBoard(80);
-	g.updateBoard(86);
-	g.updateBoard(81);
-	g.updateBoard(85);
-	g.updateBoard(82);
-	g.updateBoard(87);
-	g.updateBoard(100);
-	g.updateBoard(88);
-	cout << g.isEnd() << endl;
-	for(int i = 0 ; i < 2 ; i++){
-		for(int j = 0 ; j < 6 ; j++)
-			cout << g.winningCount[i][j] << " ";
-		cout << endl;
-	}
-	g.print_board();
-}
-*/
+   int main(){
+
+   Gomoku g(1);
+   g.updateBoard(79);
+   g.updateBoard(84);
+   g.updateBoard(80);
+   g.updateBoard(86);
+   g.updateBoard(81);
+   g.updateBoard(85);
+   g.updateBoard(82);
+   g.updateBoard(87);
+   g.updateBoard(100);
+   g.updateBoard(88);
+   cout << g.isEnd() << endl;
+   for(int i = 0 ; i < 2 ; i++){
+   for(int j = 0 ; j < 6 ; j++)
+   cout << g.winningCount[i][j] << " ";
+   cout << endl;
+   }
+   g.print_board();
+   }
+   */

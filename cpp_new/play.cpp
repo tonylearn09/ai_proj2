@@ -36,7 +36,7 @@ int main(){
                 move = Move(newGame.index_map[action]);
                 //action = minimaxPolicy.getNextAction(newGame)
                 cout << "player 1 selects (" << move.row << ", " << move.col << ")" << endl;
-                cout << "player 1 uses " << difftime(time(NULL), start) << "seconds to select a move" << endl;
+                cout << "player 1 uses " << difftime(time(NULL), start) << " seconds to select a move" << endl;
                 newGame.updateBoard(action);
             } else {
                 //cout << "Human turn (position): ";
@@ -45,7 +45,7 @@ int main(){
 
                 //action = baselinePolicy.getNextAction(newGame)
                 cout << "player 2 selects (" << move.row << ", " << move.col << ")" << endl;
-                cout << "player 2 uses " << difftime(time(NULL), start) << "seconds to select a move" << endl;
+                cout << "player 2 uses " << difftime(time(NULL), start) << " seconds to select a move" << endl;
                 newGame.updateBoard(move);
             }
             //time_to_move[nextPlayer - 1].append(time.time() - start)

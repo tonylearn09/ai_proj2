@@ -23,7 +23,8 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
     }
 
     int playerIndex = state.currentIndex;
-    int opponentIndex = state.currentIndex == 2 ? 1 : 2;
+    //int opponentIndex = state.currentIndex == 2 ? 1 : 2;
+    int opponentIndex = 3 - state.currentIndex;
 
     unordered_set<Move> fours;
     unordered_set<Move> refutations;
@@ -32,8 +33,8 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
     unordered_set<Move> opponentThrees;
 
     // Check for threats first and respond to them if they exist
-    for(int i = 0; i < state.board.size(); i++) {
-        for(int j = 0; j < state.board[i].size(); j++) {
+    for(size_t i = 0; i < state.board.size(); i++) {
+        for(size_t j = 0; j < state.board[i].size(); j++) {
             if((state.board[i][j])->index == opponentIndex) {
                 vector<Move> four_result = reducer.getFours(state,
                         state.board[i][j], opponentIndex);
@@ -68,37 +69,39 @@ vector<Move> NegamaxPlayer::getSortedMoves(const State &state) {
     }
 
     vector<ScoredMove> scoredMoves;
-    
 
-    int key_count = moveTable.count(state.getZobristHash());
-    MoveEntry entry = moveTable.get(state.getZobristHash());
+
+    bool key_exists = moveTable.exist(state.getZobristHash());
+    MoveEntry entry;
+    if (key_exists)
+        entry = moveTable.get(state.getZobristHash());
 
     for(int i = 0; i < state.board.size(); i++) {
         for(int j = 0; j < state.board[i].size(); j++) {
             // Ignore hash move
-            if(key_count > 0 &&
+            if(key_exists &&
                     (i == entry.move.row && j == entry.move.col)) {
                 continue;
             }
             if((state.board[i][j])->index == 0) {
                 if(state.hasAdjacent(i, j, 2)) {
-                    int score = evaluator.evaluateField(state, i, j,
+                    long score = evaluator.evaluateField(state, i, j,
                             state.currentIndex);
                     scoredMoves.push_back(ScoredMove(Move(i, j), score));
                     //cout << "( " << i << ", " << j << ")" << "is good" <<endl;
                 }
             }
             /*
-            if ((state.board[i][j])->index == 1) {
-                cout << "( " << i << ", " << j << ")" << "is 1" <<endl;
-                for (int m = 0; m < 3; m++) {
-                    for (int n = 0; n < 9; n++) {
-                        cout << "(" << (state.directions[i][j][m][n])->row << ", " << (state.directions[i][j][m][n])->col << ")" << 
-                            ": " << (state.directions[i][j][m][n])->index << endl;
-                    }
-                }
-            }
-            */
+               if ((state.board[i][j])->index == 1) {
+               cout << "( " << i << ", " << j << ")" << "is 1" <<endl;
+               for (int m = 0; m < 3; m++) {
+               for (int n = 0; n < 9; n++) {
+               cout << "(" << (state.directions[i][j][m][n])->row << ", " << (state.directions[i][j][m][n])->col << ")" << 
+               ": " << (state.directions[i][j][m][n])->index << endl;
+               }
+               }
+               }
+               */
         }
     }
 
@@ -126,18 +129,16 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
     }
     //nonLeafCount++;
 
-    int value;
+    long value;
     long best = LONG_MIN;
-    long count = 0;
+    //long count = 0;
 
     Move bestMove;
 
     // Try the move from a previous search
-    int key_count = moveTable.count(state.getZobristHash());
-    MoveEntry hashMoveEntry = moveTable.get(state.getZobristHash());
-
-    if (key_count > 0) {
-        count++;
+    if (moveTable.exist(state.getZobristHash())) {
+        //count++;
+        MoveEntry hashMoveEntry = moveTable.get(state.getZobristHash());
         state.makeMove(hashMoveEntry.move);
         try {
             value = -negamax(state, depth - 1, -beta, -alpha);
@@ -157,7 +158,7 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
     vector<Move> moves = getSortedMoves(state);
 
     for (Move &move : moves) {
-        count++;
+        //count++;
         state.makeMove(move);
         try {
             value = -negamax(state, depth - 1, -beta, -alpha);
@@ -182,17 +183,14 @@ long NegamaxPlayer::negamax(State& state, int depth, long alpha, long beta) {
 
 
 void NegamaxPlayer::putMoveEntry(long long key, Move move, int depth) {
-    int key_count = moveTable.count(key);
-    MoveEntry moveEntry = moveTable.get(key);
-
-
-    if (key_count == 0) {
+    if (!(moveTable.exist(key))) {
         // Not found
         moveTable.insert(key, MoveEntry(move, depth));
-    }
-    else if(depth > moveEntry.depth) {
+    } else if (depth > moveTable.get(key).depth) {
+        // depth is bigger
         moveTable.insert(key, MoveEntry(move, depth));
     }
+
 }
 
 
@@ -223,7 +221,7 @@ void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
     sort(scoredMoves.begin(), scoredMoves.end());
 
     moves.clear();
-    for(ScoredMove &move : scoredMoves) moves.push_back(move.move);
+    for (ScoredMove &move : scoredMoves) moves.push_back(move.move);
     //return moves;
 }
 
@@ -231,12 +229,12 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
     time(&startTime);
     vector<Move> moves = getSortedMoves(state);
     /*
-    cout << "Initial get move" << endl;
-    for (int i = 0; i < moves.size(); i++) {
-        cout << moves[i].row << " " << moves[i].col << endl;
-    }
-    cout << "Finish" << endl;
-    */
+       cout << "Initial get move" << endl;
+       for (int i = 0; i < moves.size(); i++) {
+       cout << moves[i].row << " " << moves[i].col << endl;
+       }
+       cout << "Finish" << endl;
+       */
     if(moves.size() == 1) return moves[0];
     for(int i = startDepth; i <= endDepth; i++) {
         if (time_out())
@@ -264,13 +262,13 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
     vector<Move> moves = gameState.getMoves();
     for (Move &move: moves) {
         state.makeMove(move);
-	}
-	/*
-	for(int i = 0 ; i < state.board.size() ; i++) {
-		for(int j = 0 ; j < state.board[i].size(); j++) {
-			cout << (state.board[i][j]) -> index
-		}
-	}*/ 
+    }
+    /*
+       for(int i = 0 ; i < state.board.size() ; i++) {
+       for(int j = 0 ; j < state.board[i].size(); j++) {
+       cout << (state.board[i][j]) -> index
+       }
+       }*/ 
     // Run a depth increasing search
     Move best = iterativeDeepening(2, 16);
     //Move best = iterativeDeepening(1, 3);
