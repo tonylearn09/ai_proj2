@@ -89,6 +89,8 @@ class State {
          */
         const Field& getField(int row, int col) const ;
 
+        void printState() const ;
+
         void init_board();
         void init_neighbor_map();
         void init_zobristkeys();

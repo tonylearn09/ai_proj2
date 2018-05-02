@@ -33,6 +33,7 @@ class Gomoku {
         void clear();
         int boardState(int pos_x, int pos_y);
         void print_board();
+        void print_move();
 
         const std::vector<Move>& getMoves() const ;
         Move getLastMove();

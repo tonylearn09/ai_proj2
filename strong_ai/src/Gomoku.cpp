@@ -120,10 +120,15 @@ bool Gomoku::updateBoard(Move move) {
     int pos_index_y = move.col;
     if (gomokuboard[pos_index_x][pos_index_y] != 0) {
         // no update
+        cout << "Get an invalid move (" << pos_index_x 
+            << ", " << pos_index_y << "),  which is occupied" << endl;
         return false;
     }
 
     moves.push_back(move);
+    // print current move
+    print_move();
+
     totalSteps[currentIndex - 1] += 1;
     //cout << totalSteps[0] << " " << totalSteps[1] << endl;
     //lastMove = pos_index;
@@ -347,6 +352,14 @@ void Gomoku::init_reverse_index_map() {
        }
        }
        */
+}
+
+void Gomoku::print_move() {
+    cout << "Current Move stack: " << endl;
+    for (auto& move: moves) {
+        cout << reverse_index_map[move] << " ";
+    }
+    cout << endl;
 }
 
 /*

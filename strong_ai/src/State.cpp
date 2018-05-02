@@ -239,3 +239,65 @@ bool State::is_valid_cell(int r, int c) {
     else
         return true;
 }
+
+void State::printState() const {
+    cout << "Current State: " << endl;
+    for (int i = 0 ; i < board.size() ; i++) {
+        if (i == 0 || i == 16) {
+            cout <<  "        " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 1 || i == 15) {
+            cout <<  "       " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 2 || i == 14) {
+            cout <<  "      " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 3 || i == 13) {
+            cout <<  "     " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 4 || i == 12) {
+            cout <<  "    " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 5 || i == 11) {
+            cout <<  "   " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 6 || i == 10) {
+            cout <<  "  " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else if (i == 7 || i == 9) {
+            cout <<  " " ;
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        } else {
+            for (int j = 0 ; j < board[i].size(); j++) {
+                cout << (board[i][j]) -> index << " ";
+            }
+            cout << endl;
+        }
+    }
+    cout << endl;
+
+}

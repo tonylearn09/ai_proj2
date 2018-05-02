@@ -263,12 +263,8 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
     for (Move &move: moves) {
         state.makeMove(move);
     }
-    /*
-       for(int i = 0 ; i < state.board.size() ; i++) {
-       for(int j = 0 ; j < state.board[i].size(); j++) {
-       cout << (state.board[i][j]) -> index
-       }
-       }*/ 
+    // print current state
+    state.printState();
     // Run a depth increasing search
     Move best = iterativeDeepening(2, 16);
     //Move best = iterativeDeepening(1, 3);
