@@ -1,4 +1,4 @@
-#include "Move.h"
+#include "../include/Move.h"
 
 Move::Move() {
     row = -1;

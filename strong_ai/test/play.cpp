@@ -1,10 +1,10 @@
 #include <iostream>
 #include <ctime>
 #include <fstream>
-#include "Gomoku.h"
-#include "RandomPolicy.h"
-#include "NegamaxPlayer.h"
-#include "Move.h"
+#include "../include/Gomoku.h"
+#include "../include/RandomPolicy.h"
+#include "../include/NegamaxPlayer.h"
+#include "../include/Move.h"
 
 using namespace std;
 

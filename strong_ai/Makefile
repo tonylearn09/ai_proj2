@@ -1,50 +1,69 @@
-# Configuration:
+#
+#   Makefile for the Hexagonal Gomoku AI
+#
+
+#   Change SGBDIR to the directory where all strong_ai files will go:
+AIDIR = .
+
+# Target 
+TARGET = player13
+
+# Test
+TEST_TARGET = play
+
+#   Change SRC_DIR to the directory where strong_ai source files will go:
+SRC_DIR = $(AIDIR)/src
+TEST_DIR = $(AIDIR)/test
+
+#   Change OBJ_DIR to the directory where strong_ai object files will go:
+OBJ_DIR = $(AIDIR)/obj
+
+# List souurce files
+SRC = $(wildcard $(SRC_DIR)/*.cpp)
+TEST_SRC = $(wildcard $(TEST_DIR)/*.cpp)
+
+# From source files, list object files
+OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+TEST_OBJ = $(TEST_SRC:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+TEST_OBJ += $(OBJ)
+TEST_OBJ := $(filter-out $(OBJ_DIR)/player13.o,$(TEST_OBJ))
+
+
+# Compiler
 CC = g++
+
+# Preprocessor flags
+CPPFLAGS += -Iinclude
+
+# Complier flags
 CFLAGS = -g -O3 -std=c++11
 
-SOURCES = Move.cpp State.cpp Field.cpp Evaluater.cpp ThreatPattern.cpp \
-		  ThreatUtils.cpp Gomoku.cpp NegamaxPlayer.cpp RandomPolicy.cpp play.cpp player13.cpp
-OBJECTS = Move.o State.o Field.o Evaluater.o ThreatPattern.o \
-		  ThreatUtils.o Gomoku.o NegamaxPlayer.o RandomPolicy.o play.o
-PLAYER_OBJECTS = Move.o State.o Field.o Evaluater.o ThreatPattern.o \
-		  ThreatUtils.o Gomoku.o NegamaxPlayer.o RandomPolicy.o player13.o
-TARGET = play
-PLAYER_TARGET = player13
+# Linker flags
+#LDFLAGS += -Llib
 
-# Buid rule
-all : $(TARGET) $(PLAYER_TARGET)
-$(TARGET) : $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
-$(PLAYER_TARGET) : $(PLAYER_OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
+# Third party library
+#LDLIBS += -lm
 
-Move.o : Move.h Move.cpp
-	$(CC) $(CFLAGS) -c Move.cpp
-Field.o : Field.h Field.cpp
-	$(CC) $(CFLAGS) -c Field.cpp
-State.o : State.h Move.h Field.h State.cpp
-	$(CC) $(CFLAGS) -c State.cpp
-Evaluater.o : Evaluater.h Field.h State.h Evaluater.cpp
-	$(CC) $(CFLAGS) -c Evaluater.cpp
-ThreatPattern.o : ThreatPattern.h ThreatPattern.cpp
-	$(CC) $(CFLAGS) -c ThreatPattern.cpp
-ThreatUtils.o : ThreatUtils.h ThreatPattern.h Move.h State.h Field.h ThreatUtils.cpp
-	$(CC) $(CFLAGS) -c ThreatUtils.cpp
-Gomoku.o : Gomoku.h Move.h Gomoku.cpp
-	$(CC) $(CFLAGS) -c Gomoku.cpp
-NegamaxPlayer.o : NegamaxPlayer.h Cache.h Move.h State.h Evaluater.h Gomoku.h ThreatUtils.h NegamaxPlayer.cpp
-	$(CC) $(CFLAGS) -c NegamaxPlayer.cpp
-RandomPolicy.o : RandomPolicy.h RandomPolicy.cpp
-	$(CC) $(CFLAGS) -c RandomPolicy.cpp
-play.o : Gomoku.h RandomPolicy.h NegamaxPlayer.h Move.h play.cpp
-	$(CC) $(CFLAGS) -c play.cpp
-player13.o : Gomoku.h NegamaxPlayer.h Move.h player13.cpp
-	$(CC) $(CFLAGS) -c player13.cpp
+all: $(TARGET) $(TEST_TARGET)
 
+$(TARGET): $(OBJ)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(TEST_TARGET): $(TEST_OBJ)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(TEST_TARGET).o: $(TEST_DIR)/$(TEST_TARGET).cpp
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 # Phony means not a "real" target, it doesn't build anything
 # The phony target "clean" is used to remove all compiled object files.
 .PHONY: clean
 clean:
-	@rm -f $(TARGET) $(OBJECTS) $(PLAYER_TARGET) $(PLAYER_OBJECTS)
+	@rm -f $(TARGET) $(OBJ) $(TEST_TARGET) $(TEST_OBJ)
 
+.PHONY: print
+print:
+	echo $(TEST_OBJ)

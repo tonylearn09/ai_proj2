@@ -1,4 +1,4 @@
-#include "Evaluater.h"
+#include "../include/Evaluater.h"
 
 Evaluator::Evaluator() {
     SCORES = {19, 15, 11, 7, 3};

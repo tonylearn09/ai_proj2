@@ -1,4 +1,4 @@
-#include "ThreatPattern.h"
+#include "../include/ThreatPattern.h"
 
 using namespace std;
 

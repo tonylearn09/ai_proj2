@@ -3,7 +3,7 @@
 #include <climits>
 #include <ctime>
 #include <iostream>
-#include "NegamaxPlayer.h"
+#include "../include/NegamaxPlayer.h"
 
 
 using namespace std;

@@ -1,6 +1,6 @@
 #include <ctime>
-#include "RandomPolicy.h"
-#include "Move.h"
+#include "../include/RandomPolicy.h"
+#include "../include/Move.h"
 
 using namespace std;
 

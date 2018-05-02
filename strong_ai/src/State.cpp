@@ -3,7 +3,7 @@
 #include <random>
 #include <iostream>
 #include <cstdlib>
-#include "State.h"
+#include "../include/State.h"
 
 using namespace std;
 

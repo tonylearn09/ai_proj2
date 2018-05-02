@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "Gomoku.h"
+#include "../include/Gomoku.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ Gomoku::Gomoku() {
     //lastMove   = make_pair(-1, -1);
     totalSteps = vector<int>(2); // (agent, opponent)
 
-    cout << "Finish setting up gameboard" << endl;
+    //cout << "Finish setting up gameboard" << endl;
 }
 
 void Gomoku::init_board() {
