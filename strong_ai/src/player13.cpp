@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <fstream>
-#include "Gomoku.h"
-#include "NegamaxPlayer.h"
-#include "Move.h"
+#include "../include/Gomoku.h"
+#include "../include/NegamaxPlayer.h"
+#include "../include/Move.h"
 
 
 int main() {
