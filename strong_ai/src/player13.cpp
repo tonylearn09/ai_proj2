@@ -108,6 +108,7 @@ int main() {
         } else if (pre_step > step) {
             //clear board
             newGame.clear();
+            remove("state_13.txt");
             //newGame.print_board();
             //system("pause");
             pre_step = 0;	
