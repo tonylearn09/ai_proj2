@@ -94,7 +94,8 @@ class NegamaxPlayer {
         Cache<long long, MoveEntry> moveTable;
 
         float max_time;
-        time_t startTime;
+        //time_t startTime;
+        clock_t startTime;
 
         //long totalNodeCount;
         //long nonLeafCount;

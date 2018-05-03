@@ -91,6 +91,8 @@ class State {
 
         void printState() const ;
 
+        void clear();
+
         void init_board();
         void init_neighbor_map();
         void init_zobristkeys();

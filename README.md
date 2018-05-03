@@ -12,7 +12,7 @@ There are two main components in this project:
 
 ## Install
 ```
-  cd cpp_new/
+  cd strong_ai/
   make
   ./play
 ``` 

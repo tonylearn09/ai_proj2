@@ -10,7 +10,7 @@ using namespace std;
 
 NegamaxPlayer::NegamaxPlayer() {
     // Set maximum allowable time to 4.0s
-    max_time = 4.0;
+    max_time = 4.8;
     moveTable.setMaxSize(1000000);
 }
 
@@ -226,7 +226,8 @@ void NegamaxPlayer::searchMoves(State &state, vector<Move>& moves, int depth) {
 }
 
 Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
-    time(&startTime);
+    startTime = clock();
+    //time(&startTime);
     vector<Move> moves = getSortedMoves(state);
     /*
        cout << "Initial get move" << endl;
@@ -237,12 +238,13 @@ Move NegamaxPlayer::iterativeDeepening(int startDepth, int endDepth) {
        */
     if(moves.size() == 1) return moves[0];
     for(int i = startDepth; i <= endDepth; i++) {
-        if (time_out())
-            break;
+        //if (time_out())
+            //break;
         try {
             //moves = searchMoves(state, moves, i);
             searchMoves(state, moves, i);
         } catch (string e) {
+            //cout << "Search depth: " << i << endl;
             break;
         }
     }
@@ -259,6 +261,7 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
 
     // Create a new internal state object, sync with the game state
     state = State();
+    //state.clear();
     vector<Move> moves = gameState.getMoves();
     for (Move &move: moves) {
         state.makeMove(move);
@@ -274,5 +277,6 @@ Move NegamaxPlayer::getMove(const Gomoku& gameState) {
 
 
 bool NegamaxPlayer::time_out() {
-    return difftime(time(NULL), startTime) >= max_time;
+    //return difftime(time(NULL), startTime) >= max_time;
+    return ((float)(clock() - startTime))/CLOCKS_PER_SEC >= max_time;
 }

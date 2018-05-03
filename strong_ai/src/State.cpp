@@ -3,6 +3,7 @@
 #include <random>
 #include <iostream>
 #include <cstdlib>
+#include <algorithm>
 #include "../include/State.h"
 
 using namespace std;
@@ -300,4 +301,15 @@ void State::printState() const {
     }
     cout << endl;
 
+}
+
+void State::clear() {
+    zobristHash = 0;
+    stack<Move>().swap(moveStack);
+    currentIndex = 1;
+    for (int i = 0; i < board.size(); i++) {
+        for (int j = 0; j < board[i].size(); j++) {
+            (board[i][j])->index = 0;
+        }
+    }
 }
