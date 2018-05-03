@@ -7,7 +7,7 @@ There are two main components in this project:
   * A weak AI player based on Minimax with α-β pruning ([weak_ai/python](weak_ai/python))
 
 ##  Gomoku Board
-<p aligm="center"><img width="400" height="400" src="board.png"/></p>
+  <p aligm="center"><img width="400" height="400" src="board.png"/></p>
 
 
 ## Getting Started
