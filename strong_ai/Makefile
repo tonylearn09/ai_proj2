@@ -24,9 +24,8 @@ TEST_SRC = $(wildcard $(TEST_DIR)/*.cpp)
 
 # From source files, list object files
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-TEST_OBJ = $(TEST_SRC:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-TEST_OBJ += $(OBJ)
-TEST_OBJ := $(filter-out $(OBJ_DIR)/player13.o,$(TEST_OBJ))
+TEST_OBJ := $(filter-out $(OBJ_DIR)/player13.o,$(OBJ))
+TEST_OBJ += $(TEST_SRC:$(TEST_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 
 # Compiler
@@ -47,16 +46,16 @@ CFLAGS = -g -O3 -std=c++11
 all: $(TARGET) $(TEST_TARGET)
 
 $(TARGET): $(OBJ)
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+	@$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@ && echo "[OK]  $@"
 
 $(TEST_TARGET): $(TEST_OBJ)
-	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+	@$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@ && echo "[OK]  $@"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ && echo "[OK]  $@"
 
 $(OBJ_DIR)/$(TEST_TARGET).o: $(TEST_DIR)/$(TEST_TARGET).cpp
-	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@ && echo "[OK]  $@"
 
 # Phony means not a "real" target, it doesn't build anything
 # The phony target "clean" is used to remove all compiled object files.
